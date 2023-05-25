@@ -2,8 +2,14 @@ package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.IJeu;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+
+import java.util.EventListener;
 
 /**
  * Cette classe correspond à la fenêtre principale de l'application.
@@ -14,7 +20,7 @@ import javafx.scene.layout.Pane;
  * (le joueur courant, les cartes Transport visibles, les destinations lors de l'étape d'initialisation de la partie, ...)
  * ainsi que les listeners à exécuter lorsque ces éléments changent
  */
-public class VueDuJeu extends Pane {
+public class VueDuJeu extends VBox {
 
     private final IJeu jeu;
     private VuePlateau plateau;
@@ -22,7 +28,24 @@ public class VueDuJeu extends Pane {
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
         plateau = new VuePlateau();
-        getChildren().add(plateau);
+
+        //4
+        Label actionARealiser = new Label();
+        actionARealiser.textProperty().bind(jeu.instructionProperty());
+
+        //3
+        Button passer = new Button("Passer");
+        this.getChildren().addAll(actionARealiser, passer);
+
+        EventHandler<MouseEvent> monHandlerAvecConvenance = MouseEvent -> {
+            jeu.passerAEteChoisi();
+        };
+        passer.setOnMouseClicked(monHandlerAvecConvenance);
+
+        VBox listeDestinations = new VBox();
+
+
+        //getChildren().add(plateau);
     }
 
     public void creerBindings() {
