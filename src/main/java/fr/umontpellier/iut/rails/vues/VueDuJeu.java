@@ -1,7 +1,10 @@
 package fr.umontpellier.iut.rails.vues;
 
+import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
+import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -25,6 +28,28 @@ public class VueDuJeu extends VBox {
     private final IJeu jeu;
     private VuePlateau plateau;
 
+    private VBox listeDestination;
+
+    private final ListChangeListener<IDestination> toto = change -> {
+        while (change.next()) {
+            if (change.wasAdded()) {
+                for (IDestination iDestination : change.getAddedSubList()) {
+                    listeDestination.getChildren().add(new Label(iDestination.getVilles().toString()));
+                }
+            } else if (change.wasRemoved()) {
+                for (IDestination iDestination : change.getRemoved()) {
+                    listeDestination.getChildren().remove(removeDestination(iDestination));
+                }
+            }
+        }
+
+
+
+
+
+
+    };
+
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
         plateau = new VuePlateau();
@@ -41,11 +66,24 @@ public class VueDuJeu extends VBox {
             jeu.passerAEteChoisi();
         };
         passer.setOnMouseClicked(monHandlerAvecConvenance);
+        listeDestination = new VBox();
+        jeu.destinationsInitialesProperty().addListener(toto);
+        this.getChildren().add(listeDestination);
 
-        VBox listeDestinations = new VBox();
 
 
         //getChildren().add(plateau);
+    }
+
+    public Label removeDestination(IDestination destination){
+        for(Node n : listeDestination.getChildren()){
+            Label labelDestination = (Label) n;
+            if(labelDestination.getText().equals(destination.getVilles().toString())){
+                return labelDestination;
+            }
+        }
+        return null;
+
     }
 
     public void creerBindings() {
