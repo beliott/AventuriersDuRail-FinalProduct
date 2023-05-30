@@ -79,7 +79,7 @@ public class VueDuJeu extends VBox {
 
 
 
-        this.getChildren().addAll(jCourant, plateau, actionARealiser, passer, listeDestination);
+        this.getChildren().addAll( plateau, actionARealiser, passer, jCourant, listeDestination);
         //getChildren().add(plateau);
     }
 
