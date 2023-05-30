@@ -79,7 +79,7 @@ public class VueDuJeu extends VBox {
 
 
 
-        this.getChildren().addAll( plateau, actionARealiser, passer, jCourant, listeDestination);
+        this.getChildren().addAll( new HBox(plateau, jCourant), actionARealiser, passer, listeDestination);
         //getChildren().add(plateau);
     }
 
@@ -95,8 +95,8 @@ public class VueDuJeu extends VBox {
     }
 
     public void creerBindings() {
-        plateau.prefWidthProperty().bind(getScene().widthProperty());
-        plateau.prefHeightProperty().bind(getScene().heightProperty());
+        plateau.prefWidthProperty().bind(getScene().widthProperty().divide(1.5));
+        plateau.prefHeightProperty().bind(getScene().heightProperty().divide(1.5));
         plateau.creerBindings();
         jCourant.creerbindings();
     }
