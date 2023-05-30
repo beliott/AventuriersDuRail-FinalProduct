@@ -9,6 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -29,6 +30,7 @@ public class VueDuJeu extends VBox {
     private VuePlateau plateau;
 
     private VBox listeDestination;
+    private VueJoueurCourant jCourant;
 
     private final ListChangeListener<IDestination> toto = change -> {
         while (change.next()) {
@@ -60,7 +62,6 @@ public class VueDuJeu extends VBox {
 
         //3
         Button passer = new Button("Passer");
-        this.getChildren().addAll(actionARealiser, passer);
 
         EventHandler<MouseEvent> monHandlerAvecConvenance = MouseEvent -> {
             jeu.passerAEteChoisi();
@@ -68,10 +69,17 @@ public class VueDuJeu extends VBox {
         passer.setOnMouseClicked(monHandlerAvecConvenance);
         listeDestination = new VBox();
         jeu.destinationsInitialesProperty().addListener(toto);
-        this.getChildren().add(listeDestination);
+
+        // 8
+        jCourant = new VueJoueurCourant(jeu.joueurCourantProperty().toString());
 
 
 
+
+
+
+
+        this.getChildren().addAll(jCourant, plateau, actionARealiser, passer, listeDestination);
         //getChildren().add(plateau);
     }
 
@@ -90,6 +98,7 @@ public class VueDuJeu extends VBox {
         plateau.prefWidthProperty().bind(getScene().widthProperty());
         plateau.prefHeightProperty().bind(getScene().heightProperty());
         plateau.creerBindings();
+        jCourant.creerbindings();
     }
 
     public IJeu getJeu() {
