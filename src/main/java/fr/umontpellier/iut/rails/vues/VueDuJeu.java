@@ -5,6 +5,7 @@ import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.mecanique.data.Destination;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -45,7 +46,7 @@ public class VueDuJeu extends VBox {
                         b = new Button(iDestination.getVilles().toString().concat(" " + String.valueOf(iDestination.getValeurMax())));
                     }
                     b.setStyle("-fx-font-family: Chilanka");
-                    b.setStyle("-fx-font-weight:Bold");
+                    // b.setStyle("-fx-font-weight:Bold");
                     listeDestination.getChildren().add(b);
 
                 }
@@ -64,6 +65,7 @@ public class VueDuJeu extends VBox {
         //4
         Label actionARealiser = new Label();
         actionARealiser.textProperty().bind(jeu.instructionProperty());
+        actionARealiser.setStyle("-fx-font-family: Chilanka; -fx-font-size: 25px ");
 
         //3
         Button passer = new Button("Passer");
@@ -77,7 +79,10 @@ public class VueDuJeu extends VBox {
 
         // 8
         jCourant = new VueJoueurCourant(jeu.joueurCourantProperty().get());
-
+        HBox plateauEtJoueur = new HBox(plateau, jCourant);
+        plateauEtJoueur.setStyle("-fx-background-color: tan");
+        plateauEtJoueur.setPadding(new Insets(20, 20, 20, 20));
+        plateauEtJoueur.setSpacing(20);
         /* Boutons */
 
 
@@ -86,15 +91,15 @@ public class VueDuJeu extends VBox {
 
 
 
-        this.getChildren().addAll( actionARealiser, new HBox(plateau, jCourant), passer, listeDestination);
+        this.getChildren().addAll( actionARealiser, plateauEtJoueur, passer, listeDestination);
         //getChildren().add(plateau);
     }
 
-    public Label removeDestination(IDestination destination){
+    public Button removeDestination(IDestination destination){
         for(Node n : listeDestination.getChildren()){
-            Label labelDestination = (Label) n;
-            if(labelDestination.getText().equals(destination.getVilles().toString())){
-                return labelDestination;
+            Button boutonDestination = (Button) n;
+            if(boutonDestination.getText().equals(destination.getVilles().toString() + " " + destination.getValeur()) || boutonDestination.getText().equals(destination.getVilles().toString() + " " + destination.getValeurMax()) ){
+                return boutonDestination;
             }
         }
         return null;
@@ -104,6 +109,11 @@ public class VueDuJeu extends VBox {
     public void creerBindings() {
         plateau.prefWidthProperty().bind(getScene().widthProperty().divide(1.5));
         plateau.prefHeightProperty().bind(getScene().heightProperty().divide(1.5));
+
+        jCourant.prefWidthProperty().bind(getScene().widthProperty().subtract(plateau.prefWidthProperty()));
+        jCourant.prefHeightProperty().bindBidirectional(plateau.prefHeightProperty());
+        jCourant.maxHeightProperty().bind(plateau.prefHeightProperty());
+
         plateau.creerBindings();
         jCourant.creerbindings();
     }
@@ -114,4 +124,7 @@ public class VueDuJeu extends VBox {
 
     EventHandler<? super MouseEvent> actionPasserParDefaut = (mouseEvent -> getJeu().passerAEteChoisi());
 
+    public VuePlateau getPlateau() {
+        return plateau;
+    }
 }

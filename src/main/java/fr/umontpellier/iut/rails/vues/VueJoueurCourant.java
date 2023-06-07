@@ -8,13 +8,11 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 /**
@@ -27,7 +25,7 @@ public class VueJoueurCourant extends BorderPane {
     private Label scoreJoueur;
     // center
     private Label nomJoueur;
-    private VBox lesCartesDuJoueur;
+    private FlowPane lesCartesDuJoueur;
     // bottom
     private Label dest, nbPionsWagons, nbPionsBateaux, nbPorts;
 
@@ -36,7 +34,7 @@ public class VueJoueurCourant extends BorderPane {
 
         this.dest = new Label("Destinations");
         this.nomJoueur = new Label();
-        this.lesCartesDuJoueur = new VBox();
+        this.lesCartesDuJoueur = new FlowPane(); lesCartesDuJoueur.setHgap(20); lesCartesDuJoueur.setVgap(20); lesCartesDuJoueur.setPadding(new Insets(20, 20 ,20 ,20));
         VBox centre = new VBox(this.nomJoueur, this.lesCartesDuJoueur);
 
         ImageView imgW = new ImageView("images/bouton-pions-wagon.png");
@@ -76,8 +74,7 @@ public class VueJoueurCourant extends BorderPane {
         return "gray";
     }
     public void creerbindings(){
-        this.prefWidthProperty().bind(getScene().widthProperty().divide(2.5));
-        this.prefHeightProperty().bind(getScene().widthProperty().divide(2.5));
+
         ChangeListener<IJoueur> joueurCourantListener = (observableValue, oldJ, newJ) -> {
             this.setStyle("-fx-background-color: " + traduceColor(newJ.getCouleur())); // background
             scoreJoueur.setText("Score : "+ newJ.getScore()); // verif si il faut pas faire avec property
@@ -89,7 +86,7 @@ public class VueJoueurCourant extends BorderPane {
                 String lienCarte = getlinkImage(c);
                 ImageView imgCarte = new ImageView(lienCarte);
                 imgCarte.setPreserveRatio(true); // on preserve ses proportions
-                imgCarte.setFitWidth(50);
+                imgCarte.setFitWidth(100);
                 lesCartesDuJoueur.getChildren().add(imgCarte);
             }
 
