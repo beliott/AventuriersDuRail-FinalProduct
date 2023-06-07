@@ -7,4 +7,5 @@ public interface IDestination {
     int getValeur();
     int getValeurMax();
     List<String> getVilles();
+
 }

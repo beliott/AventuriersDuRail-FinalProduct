@@ -65,6 +65,12 @@ public class Destination implements IDestination {
     public int getValeur() {
         return valeurSimple;
     }
+    public boolean estItineraire(){
+        if (this.getVilles().size() > 2){
+            return true;
+        }
+        return false;
+    }
 
     public int getValeurMax() {
         return valeurMax;

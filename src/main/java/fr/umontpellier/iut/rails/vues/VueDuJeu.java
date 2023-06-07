@@ -6,15 +6,19 @@ import fr.umontpellier.iut.rails.mecanique.data.Destination;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Shadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+
 
 import java.util.EventListener;
 
@@ -39,24 +43,46 @@ public class VueDuJeu extends VBox {
         while (change.next()) {
             if (change.wasAdded()) {
                 for (IDestination iDestination : change.getAddedSubList()) {
-                    Button b;
-                    if (iDestination.getVilles().size() <= 2)
-                        b = new Button(iDestination.getVilles().toString().concat(" " + String.valueOf(iDestination.getValeur())));
-                    else {
-                        b = new Button(iDestination.getVilles().toString().concat(" " + String.valueOf(iDestination.getValeurMax())));
-                    }
-                    b.setStyle("-fx-font-family: Chilanka");
-                    // b.setStyle("-fx-font-weight:Bold");
-                    listeDestination.getChildren().add(b);
+                    Button b = new Button();
+                    VBox v = new VBox();
+                    HBox h1 = new HBox();
+                    HBox h2 = new HBox();
+                    v.getChildren().addAll(h1,h2);
+                    Label valeur = new Label();
+                    Label ville1= new Label(iDestination.getVilles().get(0));
+                    Label ville2 = new Label(iDestination.getVilles().get(iDestination.getVilles().size()-1));
+                    h1.getChildren().addAll(ville1);
+                    h2.getChildren().add(ville2);
+                    h2.setAlignment(Pos.CENTER_RIGHT);
 
+
+
+                    if (iDestination.getVilles().size() <= 2){
+                        b = new Button();
+                        valeur.setText(String.valueOf(iDestination.getValeur()));
+                        h1.getChildren().add(valeur);
+                        valeur.setAlignment(Pos.TOP_RIGHT);
+                    }
+                    else {
+                        b = new Button();
+                        valeur.setText(String.valueOf(iDestination.getValeurMax()));
+                        h1.getChildren().add(valeur);
+                        valeur.setAlignment(Pos.TOP_RIGHT);
+                    }
+                    h1.setSpacing(50);
+                    b.setGraphic(v);
+                    b.setStyle("-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
+                    listeDestination.setSpacing(10);
+                    listeDestination.getChildren().add(b);
                 }
             } else if (change.wasRemoved()) {
                 for (IDestination iDestination : change.getRemoved()) {
                     listeDestination.getChildren().remove(removeDestination(iDestination));
                 }
             }
-        }
     };
+
+};
 
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
@@ -67,13 +93,19 @@ public class VueDuJeu extends VBox {
         actionARealiser.textProperty().bind(jeu.instructionProperty());
         actionARealiser.setStyle("-fx-font-family: Chilanka; -fx-font-size: 25px ");
 
-        //3
+        //3 Bouton passer
         Button passer = new Button("Passer");
-
-        EventHandler<MouseEvent> monHandlerAvecConvenance = MouseEvent -> {
+        passer.setMinSize(250,35);
+        passer.setStyle("-fx-background-color: #0078B8; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px;");
+        passer.setOnMouseClicked(event -> {
             jeu.passerAEteChoisi();
-        };
-        passer.setOnMouseClicked(monHandlerAvecConvenance);
+        });
+        DropShadow dropShadow = new DropShadow(10, Color.GRAY);
+        passer.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> passer.setEffect(dropShadow));
+        passer.addEventHandler(MouseEvent.MOUSE_EXITED, event -> passer.setEffect(null));
+
+
+
         listeDestination = new HBox();
         jeu.destinationsInitialesProperty().addListener(toto);
 
@@ -83,18 +115,41 @@ public class VueDuJeu extends VBox {
         plateauEtJoueur.setStyle("-fx-background-color: tan");
         plateauEtJoueur.setPadding(new Insets(20, 20, 20, 20));
         plateauEtJoueur.setSpacing(20);
-        /* Boutons */
+
+        /* Affichage en bas a droite */
+
+        GridPane partieBasDroite = new GridPane();
+        partieBasDroite.prefWidthProperty().bind(jCourant.prefWidthProperty());
+        VBox test1 = new VBox();
+        test1.setMinHeight(35);
+        VBox test2 = new VBox();
+        test2.setMinHeight(35);
+        VBox test3 = new VBox();
+        test3.setMinHeight(35);
+        partieBasDroite.add(test1,0,0);
+        partieBasDroite.add(test2,1,0);
+        partieBasDroite.add(test3, 2,0);
+        partieBasDroite.add(passer,0,6); // bouton passer
+
+        /* Affichage en bas */
+        BorderPane partieBas = new BorderPane();
+        partieBas.setLeft(listeDestination);
+        partieBas.setRight(partieBasDroite);
 
 
 
-
-
-
-
-        this.getChildren().addAll( actionARealiser, plateauEtJoueur, passer, listeDestination);
+        setBackGround();
+        this.getChildren().addAll( actionARealiser, plateauEtJoueur,partieBas);
         //getChildren().add(plateau);
     }
-
+    public void setBackGround(){
+        Image bground = new Image("bground.png");
+        BackgroundImage background = new BackgroundImage(bground,
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+        Background backgroundImage = new Background(background);
+        this.setBackground(backgroundImage);
+    }
     public Button removeDestination(IDestination destination){
         for(Node n : listeDestination.getChildren()){
             Button boutonDestination = (Button) n;
@@ -107,8 +162,8 @@ public class VueDuJeu extends VBox {
     }
 
     public void creerBindings() {
-        plateau.prefWidthProperty().bind(getScene().widthProperty().divide(1.5));
-        plateau.prefHeightProperty().bind(getScene().heightProperty().divide(1.5));
+        plateau.prefWidthProperty().bind(getScene().widthProperty().divide(1.3));
+        plateau.prefHeightProperty().bind(getScene().heightProperty().divide(1.3));
 
         jCourant.prefWidthProperty().bind(getScene().widthProperty().subtract(plateau.prefWidthProperty()));
         jCourant.prefHeightProperty().bindBidirectional(plateau.prefHeightProperty());
