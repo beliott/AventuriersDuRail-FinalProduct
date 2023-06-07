@@ -61,6 +61,7 @@ public class Destination implements IDestination {
         return valeurSimple;
     }
 
+
     public int getValeur() {
         return valeurSimple;
     }

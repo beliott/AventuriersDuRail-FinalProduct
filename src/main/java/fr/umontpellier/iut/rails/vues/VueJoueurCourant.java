@@ -20,7 +20,6 @@ public class VueJoueurCourant extends VBox {
 
     public VueJoueurCourant(String nomJoueur) {
         this.nomJoueur = new Label(nomJoueur);
-
         this.lesCartesDuJoueur = new VBox();
         this.getChildren().addAll(this.nomJoueur, this.lesCartesDuJoueur);
     }

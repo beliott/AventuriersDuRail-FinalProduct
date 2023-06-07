@@ -2,12 +2,14 @@ package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
+import fr.umontpellier.iut.rails.mecanique.data.Destination;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.Shadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -29,14 +31,23 @@ public class VueDuJeu extends VBox {
     private final IJeu jeu;
     private VuePlateau plateau;
 
-    private VBox listeDestination;
+    private HBox listeDestination;
     private VueJoueurCourant jCourant;
 
     private final ListChangeListener<IDestination> toto = change -> {
         while (change.next()) {
             if (change.wasAdded()) {
                 for (IDestination iDestination : change.getAddedSubList()) {
-                    listeDestination.getChildren().add(new Label(iDestination.getVilles().toString()));
+                    Button b;
+                    if (iDestination.getVilles().size() <= 2)
+                        b = new Button(iDestination.getVilles().toString().concat(" " + String.valueOf(iDestination.getValeur())));
+                    else {
+                        b = new Button(iDestination.getVilles().toString().concat(" " + String.valueOf(iDestination.getValeurMax())));
+                    }
+                    b.setStyle("-fx-font-family: Chilanka");
+                    b.setStyle("-fx-font-weight:Bold");
+                    listeDestination.getChildren().add(b);
+
                 }
             } else if (change.wasRemoved()) {
                 for (IDestination iDestination : change.getRemoved()) {
@@ -44,12 +55,6 @@ public class VueDuJeu extends VBox {
                 }
             }
         }
-
-
-
-
-
-
     };
 
     public VueDuJeu(IJeu jeu) {
@@ -67,12 +72,13 @@ public class VueDuJeu extends VBox {
             jeu.passerAEteChoisi();
         };
         passer.setOnMouseClicked(monHandlerAvecConvenance);
-        listeDestination = new VBox();
+        listeDestination = new HBox();
         jeu.destinationsInitialesProperty().addListener(toto);
 
         // 8
         jCourant = new VueJoueurCourant(jeu.joueurCourantProperty().toString());
 
+        /* Boutons */
 
 
 
