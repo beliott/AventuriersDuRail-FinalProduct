@@ -76,7 +76,7 @@ public class VueDuJeu extends VBox {
         jeu.destinationsInitialesProperty().addListener(toto);
 
         // 8
-        jCourant = new VueJoueurCourant(jeu.joueurCourantProperty().toString());
+        jCourant = new VueJoueurCourant(jeu.joueurCourantProperty().get());
 
         /* Boutons */
 
@@ -85,7 +85,8 @@ public class VueDuJeu extends VBox {
 
 
 
-        this.getChildren().addAll( new HBox(plateau, jCourant), actionARealiser, passer, listeDestination);
+
+        this.getChildren().addAll( actionARealiser, new HBox(plateau, jCourant), passer, listeDestination);
         //getChildren().add(plateau);
     }
 
