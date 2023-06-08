@@ -128,6 +128,9 @@ public class VueDuJeu extends VBox {
             v.setStyle("-fx-background-color: " + v.traduceColor(j.getCouleur()));
         }
 
+        /* Test regler ratio pions */
+
+
 
         /* Affichage en bas a droite */
 
@@ -195,14 +198,20 @@ public class VueDuJeu extends VBox {
         /* Listener du joueur actuel */
         ChangeListener<IJoueur> listenerJoueurAffichage = (observableValue, oldJ, newJ) -> {
             String nomJActuel = newJ.getNom();
+            HBox parent = new HBox();
+            VueAutresJoueurs vueDelAncien = new VueAutresJoueurs("");
             for ( VueAutresJoueurs v : jPasCourant){
                 if (nomJActuel.equals(v.getNomJoueur().getText())){
-                    v.setVisible(false);
+                    HBox p = (HBox) v.getParent();
+                    parent = p;
+                    p.getChildren().remove(v);
                 } else if (oldJ != null) {
-                    if (oldJ.getNom().equals(v.getNomJoueur().getText()))
-                        v.setVisible(true);
+                    if (oldJ.getNom().equals(v.getNomJoueur().getText())) {
+                        vueDelAncien = v;
+                    }
                 }
             }
+            parent.getChildren().add(vueDelAncien);
         };
         this.jeu.joueurCourantProperty().addListener(listenerJoueurAffichage);
     }
