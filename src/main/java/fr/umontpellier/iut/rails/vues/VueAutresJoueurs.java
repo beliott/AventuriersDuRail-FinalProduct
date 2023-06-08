@@ -31,6 +31,7 @@ public class VueAutresJoueurs extends StackPane {
         this.scoreAffichage  = new VBox();
         scoreAffichage.setStyle("-fx-border-color: black");
         this.getChildren().addAll(scoreAffichage,this.nomJoueur);
+
     }
     public void creerBinding(){
         nbPionsBateaux.setText(nbPionsBateaux.getText().concat("40"));
@@ -41,8 +42,14 @@ public class VueAutresJoueurs extends StackPane {
         nbPionsWagons.setAlignment(Pos.CENTER);
         nbPorts.setAlignment(Pos.BOTTOM_CENTER);
         scoreAffichage.setVisible(false);
-        this.setOnMouseEntered(event -> scoreAffichage.setVisible(true));
-        this.setOnMouseExited(event ->scoreAffichage.setVisible(false));
+        this.setOnMouseEntered(event -> {
+            scoreAffichage.setVisible(true);
+            this.nomJoueur.setVisible(false);
+        });
+        this.setOnMouseExited(event ->{
+            scoreAffichage.setVisible(false);
+            this.nomJoueur.setVisible(true);
+        });
     }
 
     public void setNomJoueur(Label nomJoueur) {
@@ -59,5 +66,22 @@ public class VueAutresJoueurs extends StackPane {
 
     public void setNbPorts(Label nbPorts) {
         this.nbPorts = nbPorts;
+    }
+    public String traduceColor(IJoueur.CouleurJoueur c){
+        if(c.equals(IJoueur.CouleurJoueur.BLEU))
+            return "cadetblue";
+        else if (c.equals(IJoueur.CouleurJoueur.JAUNE)) {
+            return "yellow";
+        }
+        else if (c.equals(IJoueur.CouleurJoueur.ROSE)) {
+            return "pink";
+        }
+        else if (c.equals(IJoueur.CouleurJoueur.ROUGE)) {
+            return "crimson";
+        }
+        else if (c.equals(IJoueur.CouleurJoueur.VERT)) {
+            return "yellowgreen";
+        }
+        return "gray";
     }
 }

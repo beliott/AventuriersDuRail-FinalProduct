@@ -1,5 +1,6 @@
 package fr.umontpellier.iut.rails.vues;
 
+import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.mecanique.data.Destination;
@@ -20,7 +21,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 
+import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
+
+
 
 /**
  * Cette classe correspond à la fenêtre principale de l'application.
@@ -39,7 +44,7 @@ public class VueDuJeu extends VBox {
     private HBox listeDestination;
     private VueJoueurCourant jCourant;
 
-    private VueAutresJoueurs jPasCourant;
+    private List<VueAutresJoueurs> jPasCourant;
     private final ListChangeListener<IDestination> toto = change -> {
         while (change.next()) {
             if (change.wasAdded()) {
@@ -74,6 +79,7 @@ public class VueDuJeu extends VBox {
             } else if (change.wasRemoved()) {
                 for (IDestination iDestination : change.getRemoved()) {
                     listeDestination.getChildren().remove(removeDestination(iDestination));
+
                 }
             }
     };
@@ -112,27 +118,35 @@ public class VueDuJeu extends VBox {
         plateauEtJoueur.setPadding(new Insets(20, 20, 20, 20));
         plateauEtJoueur.setSpacing(20);
 
+        /*Vue autre Joueur*/
+
+        this.jPasCourant = new ArrayList<>();
+        for(IJoueur j : jeu.getJoueurs()) {
+            if (!jCourant.equals(j)) {
+                VueAutresJoueurs v = new VueAutresJoueurs(j.getNom());
+                this.jPasCourant.add(v);
+                v.creerBinding();
+                v.setStyle("-fx-background-color: " + v.traduceColor(j.getCouleur()));
+            }
+        }
+
+
         /* Affichage en bas a droite */
 
-        GridPane partieBasDroite = new GridPane();
+        VBox partieBasDroite = new VBox();
+        HBox container = new HBox();
         partieBasDroite.prefWidthProperty().bind(jCourant.prefWidthProperty());
-        VBox test1 = new VBox();
-        test1.setMinHeight(35);
-        VBox test2 = new VBox();
-        test2.setMinHeight(35);
-        VBox test3 = new VBox();
-        test3.setMinHeight(35);
-        partieBasDroite.add(test1,0,0);
-        partieBasDroite.add(test2,1,0);
-        partieBasDroite.add(test3, 2,0);
-        partieBasDroite.add(passer,0,6); // bouton passer
+        for (VueAutresJoueurs v : this.jPasCourant) {
+          container.getChildren().add(v);
+        }
+        partieBasDroite.getChildren().add(container);
+        partieBasDroite.getChildren().add(passer);
 
         /* Affichage en bas */
         BorderPane partieBas = new BorderPane();
         partieBas.setLeft(listeDestination);
         partieBas.setRight(partieBasDroite);
 
-        /*Vue autre Joueur*/
 
 
 
