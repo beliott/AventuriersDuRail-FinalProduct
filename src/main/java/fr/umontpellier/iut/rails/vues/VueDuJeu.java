@@ -39,6 +39,7 @@ public class VueDuJeu extends VBox {
     private HBox listeDestination;
     private VueJoueurCourant jCourant;
 
+    private VueAutresJoueurs jPasCourant;
     private final ListChangeListener<IDestination> toto = change -> {
         while (change.next()) {
             if (change.wasAdded()) {
@@ -135,6 +136,8 @@ public class VueDuJeu extends VBox {
         BorderPane partieBas = new BorderPane();
         partieBas.setLeft(listeDestination);
         partieBas.setRight(partieBasDroite);
+
+        /*Vue autre Joueur*/
 
 
 
