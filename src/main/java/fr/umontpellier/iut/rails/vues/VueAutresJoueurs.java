@@ -18,18 +18,18 @@ import javafx.scene.layout.VBox;
  */
 public class VueAutresJoueurs extends StackPane {
     private Label nomJoueur;
-    private Label nbPionsWagons, nbPionsBateaux, nbPorts;
+    private Label nbPionsWagons, nbPionsBateaux, nbPorts, score;
 
     private VBox scoreAffichage;
 
 
     public VueAutresJoueurs(String nomJoueur) {
         this.nomJoueur = new Label(nomJoueur);
-        this.nbPionsWagons = new Label("Pions Wagons : ");
+        this.score = new Label("Score : ");
+        this.nbPionsWagons = new Label("Pions Wagons : " );
         this.nbPionsBateaux = new Label("Pions Bateaux : ");
         this.nbPorts = new Label("Nombre de ports : ");
         this.scoreAffichage  = new VBox();
-        scoreAffichage.setStyle("-fx-border-color: black");
         this.getChildren().addAll(scoreAffichage,this.nomJoueur);
 
     }
@@ -37,11 +37,17 @@ public class VueAutresJoueurs extends StackPane {
         nbPionsBateaux.setText(nbPionsBateaux.getText().concat("40"));
         nbPorts.setText(nbPorts.getText().concat("30"));
         nbPionsWagons.setText(nbPionsWagons.getText().concat("60"));
-        scoreAffichage.getChildren().addAll(nbPionsBateaux,nbPionsWagons,nbPorts);
+        scoreAffichage.getChildren().addAll(score,nbPionsBateaux,nbPionsWagons,nbPorts);
         nbPionsBateaux.setAlignment(Pos.TOP_CENTER);
         nbPionsWagons.setAlignment(Pos.CENTER);
         nbPorts.setAlignment(Pos.BOTTOM_CENTER);
         scoreAffichage.setVisible(false);
+        scoreAffichage.setStyle("-fx-background-color: #6F4E37; -fx-text-fill: white; -fx-font-size: 20px; " +
+                "-fx-padding: 10px; -fx-border-color: #543A29; -fx-border-width: 2px; " +
+                "-fx-border-radius: 5px; -fx-background-radius: 5px; " +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);");
+
+
         this.setOnMouseEntered(event -> {
             scoreAffichage.setVisible(true);
             this.nomJoueur.setVisible(false);

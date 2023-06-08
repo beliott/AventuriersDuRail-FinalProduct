@@ -108,6 +108,8 @@ public class VueDuJeu extends VBox {
 
         listeDestination = new HBox();
         jeu.destinationsInitialesProperty().addListener(toto);
+        listeDestination.setPadding(new Insets(100));
+        listeDestination.setAlignment(Pos.CENTER);
 
         // 8
         jCourant = new VueJoueurCourant(jeu.joueurCourantProperty().get());
@@ -137,11 +139,13 @@ public class VueDuJeu extends VBox {
         for (VueAutresJoueurs v : this.jPasCourant) {
           container.getChildren().add(v);
         }
+        container.setSpacing(10);
+        partieBasDroite.setSpacing(25);
         partieBasDroite.setPadding(new Insets(10,10,10,10));
-        partieBasDroite.setSpacing(10);
         partieBasDroite.getChildren().add(container);
         partieBasDroite.getChildren().add(passer);
         passer.prefWidthProperty().bind(partieBasDroite.prefWidthProperty());
+        container.prefWidthProperty().bind(partieBasDroite.prefWidthProperty());
 
 
         /* Affichage en bas */
@@ -185,7 +189,9 @@ public class VueDuJeu extends VBox {
 
         plateau.creerBindings();
         jCourant.creerbindings();
+
     }
+
 
     public IJeu getJeu() {
         return jeu;
