@@ -103,4 +103,8 @@ public class VueAutresJoueurs extends StackPane {
         }
         return "gray";
     }
+
+    public Label getNomJoueur() {
+        return nomJoueur;
+    }
 }

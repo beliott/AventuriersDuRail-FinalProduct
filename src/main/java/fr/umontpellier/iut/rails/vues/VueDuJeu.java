@@ -4,6 +4,7 @@ import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.mecanique.data.Destination;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -190,6 +191,20 @@ public class VueDuJeu extends VBox {
         for (VueAutresJoueurs v : jPasCourant){
             v.creerBinding();
         }
+
+        /* Listener du joueur actuel */
+        ChangeListener<IJoueur> listenerJoueurAffichage = (observableValue, oldJ, newJ) -> {
+            String nomJActuel = newJ.getNom();
+            for ( VueAutresJoueurs v : jPasCourant){
+                if (nomJActuel.equals(v.getNomJoueur().getText())){
+                    v.setVisible(false);
+                } else if (oldJ != null) {
+                    if (oldJ.getNom().equals(v.getNomJoueur().getText()))
+                        v.setVisible(true);
+                }
+            }
+        };
+        this.jeu.joueurCourantProperty().addListener(listenerJoueurAffichage);
     }
 
     public IJeu getJeu() {
