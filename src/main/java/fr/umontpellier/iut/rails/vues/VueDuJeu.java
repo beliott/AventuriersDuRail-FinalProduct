@@ -79,7 +79,6 @@ public class VueDuJeu extends VBox {
             } else if (change.wasRemoved()) {
                 for (IDestination iDestination : change.getRemoved()) {
                     listeDestination.getChildren().remove(removeDestination(iDestination));
-
                 }
             }
     };
@@ -97,8 +96,7 @@ public class VueDuJeu extends VBox {
 
         //3 Bouton passer
         Button passer = new Button("Passer");
-        passer.setMinSize(250,35);
-        passer.setStyle("-fx-background-color: #0078B8; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px;");
+        passer.setStyle("-fx-background-color: #0078B8; -fx-text-fill: white; -fx-font-size: 14px;");
         passer.setOnMouseClicked(event -> {
             jeu.passerAEteChoisi();
         });
@@ -139,8 +137,12 @@ public class VueDuJeu extends VBox {
         for (VueAutresJoueurs v : this.jPasCourant) {
           container.getChildren().add(v);
         }
+        partieBasDroite.setPadding(new Insets(10,10,10,10));
+        partieBasDroite.setSpacing(10);
         partieBasDroite.getChildren().add(container);
         partieBasDroite.getChildren().add(passer);
+        passer.prefWidthProperty().bind(partieBasDroite.prefWidthProperty());
+
 
         /* Affichage en bas */
         BorderPane partieBas = new BorderPane();
