@@ -122,12 +122,9 @@ public class VueDuJeu extends VBox {
 
         this.jPasCourant = new ArrayList<>();
         for(IJoueur j : jeu.getJoueurs()) {
-            if (!jCourant.equals(j)) {
-                VueAutresJoueurs v = new VueAutresJoueurs(j.getNom());
-                this.jPasCourant.add(v);
-                v.creerBinding();
-                v.setStyle("-fx-background-color: " + v.traduceColor(j.getCouleur()));
-            }
+            VueAutresJoueurs v = new VueAutresJoueurs(j.getNom());
+            this.jPasCourant.add(v);
+            v.setStyle("-fx-background-color: " + v.traduceColor(j.getCouleur()));
         }
 
 
@@ -190,8 +187,10 @@ public class VueDuJeu extends VBox {
         plateau.creerBindings();
         jCourant.creerbindings();
 
+        for (VueAutresJoueurs v : jPasCourant){
+            v.creerBinding();
+        }
     }
-
 
     public IJeu getJeu() {
         return jeu;

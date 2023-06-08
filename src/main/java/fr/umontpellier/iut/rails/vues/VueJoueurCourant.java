@@ -97,7 +97,7 @@ public class VueJoueurCourant extends BorderPane {
             }
             nbPionsWagons.textProperty().bind(newJ.nbPionsWagonsProperty().asString());
             nbPionsBateaux.textProperty().bind(newJ.nbPionsBateauxProperty().asString());
-            nbPorts.setText("" + (3 - newJ.getNbPorts())); // affiche le nb de ports qu'il peut poser
+            nbPorts.setText("" + (3 - newJ.getNbPorts())); // TODO : bind pour que ca soit correct
 
 
         };

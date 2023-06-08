@@ -1,6 +1,8 @@
 package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.IJoueur;
+import fr.umontpellier.iut.rails.mecanique.Joueur;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -33,10 +35,21 @@ public class VueAutresJoueurs extends StackPane {
         this.getChildren().addAll(scoreAffichage,this.nomJoueur);
 
     }
+
+    IJoueur getJoueur(String nom){
+        for (IJoueur j : ((VueDuJeu) getScene().getRoot()).getJeu().getJoueurs()) {
+            if (j.getNom().equals(this.nomJoueur.getText()))
+                return j;
+        }
+        return null;
+    }
     public void creerBinding(){
-        nbPionsBateaux.setText(nbPionsBateaux.getText().concat("40"));
+        nbPionsBateaux.textProperty().bind(Bindings.concat(nbPionsBateaux.getText(),((Joueur)getJoueur(this.nomJoueur.getText())).nbPionsBateauxProperty()));
+        //nbPionsBateaux.setText(nbPionsBateaux.getText().concat("40"));
         nbPorts.setText(nbPorts.getText().concat("30"));
-        nbPionsWagons.setText(nbPionsWagons.getText().concat("60"));
+
+        nbPionsWagons.textProperty().bind(Bindings.concat(nbPionsWagons.getText(),((Joueur)getJoueur(this.nomJoueur.getText())).nbPionsWagonsProperty()));
+        //nbPionsWagons.setText(nbPionsWagons.getText().concat("20"));
         scoreAffichage.getChildren().addAll(score,nbPionsBateaux,nbPionsWagons,nbPorts);
         nbPionsBateaux.setAlignment(Pos.TOP_CENTER);
         nbPionsWagons.setAlignment(Pos.CENTER);

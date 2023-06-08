@@ -21,6 +21,7 @@ public interface IJoueur {
     String getNom();
     CouleurJoueur getCouleur();
     int getScore();
+    public IntegerProperty scoreProperty();
 
     enum CouleurJoueur {
         JAUNE, ROUGE, BLEU, VERT, ROSE

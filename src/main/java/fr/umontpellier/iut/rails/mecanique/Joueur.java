@@ -58,7 +58,7 @@ public class Joueur implements IJoueur {
     /**
      * Liste des villes sur lesquelles le joueur a construit un port
      */
-    private final List<Ville> ports;
+    private final ObservableList<Ville> ports;
     /**
      * Liste des routes capturées par le joueur
      */
@@ -76,7 +76,7 @@ public class Joueur implements IJoueur {
         this.nom =  new SimpleObjectProperty<>(nom);
         this.jeu = jeu;
         this.couleur = couleur;
-        this.ports = new ArrayList<>();
+        this.ports = FXCollections.observableArrayList();
         this.routes = new ArrayList<>();
         this.nbPionsWagon = new SimpleIntegerProperty();
         this.nbPionsWagonEnReserve = 25;
@@ -93,6 +93,11 @@ public class Joueur implements IJoueur {
      */
     public ObservableList<CarteTransport> cartesTransportProperty() { return cartesTransport; }
     public ObservableList<CarteTransport> cartesTransportPoseesProperty() { return cartesTransportPosees; }
+
+    public ObservableList<Ville> getPorts() {
+        return ports;
+    }
+
     public IntegerProperty nbPionsWagonsProperty() {
         return nbPionsWagon;
     }
