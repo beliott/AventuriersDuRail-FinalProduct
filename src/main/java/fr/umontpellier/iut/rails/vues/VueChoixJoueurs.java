@@ -1,5 +1,6 @@
 package fr.umontpellier.iut.rails.vues;
 
+import fr.umontpellier.iut.rails.mecanique.Jeu;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -66,7 +67,7 @@ public class VueChoixJoueurs extends Stage {
      * Retourne le nombre de participants à la partie que l'utilisateur a renseigné
      */
     protected int getNombreDeJoueurs() {
-        throw new RuntimeException("Methode à implémenter");
+        return ((VueDuJeu) getScene().getRoot()).getJeu().getJoueurs().size();
     }
 
     /**

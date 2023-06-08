@@ -55,25 +55,20 @@ public class VueDuJeu extends VBox {
                     h1.getChildren().addAll(ville1);
                     h2.getChildren().add(ville2);
                     h2.setAlignment(Pos.CENTER_RIGHT);
-
-
-
                     if (iDestination.getVilles().size() <= 2){
-                        b = new Button();
                         valeur.setText(String.valueOf(iDestination.getValeur()));
                         h1.getChildren().add(valeur);
-                        valeur.setAlignment(Pos.TOP_RIGHT);
                     }
                     else {
-                        b = new Button();
                         valeur.setText(String.valueOf(iDestination.getValeurMax()));
                         h1.getChildren().add(valeur);
-                        valeur.setAlignment(Pos.TOP_RIGHT);
                     }
+                    valeur.setAlignment(Pos.TOP_RIGHT);
                     h1.setSpacing(50);
                     b.setGraphic(v);
                     b.setStyle("-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 10, 0, 0, 0);-fx-focus-color: transparent; -fx-faint-focus-color: transparent;");
                     listeDestination.setSpacing(10);
+                    b.setId(iDestination.getNom());
                     listeDestination.getChildren().add(b);
                 }
             } else if (change.wasRemoved()) {
@@ -156,7 +151,7 @@ public class VueDuJeu extends VBox {
     public Button removeDestination(IDestination destination){
         for(Node n : listeDestination.getChildren()){
             Button boutonDestination = (Button) n;
-            if(boutonDestination.getText().equals(destination.getVilles().toString() + " " + destination.getValeur()) || boutonDestination.getText().equals(destination.getVilles().toString() + " " + destination.getValeurMax()) ){
+            if(boutonDestination.getId().equals(destination.getNom())){
                 return boutonDestination;
             }
         }
