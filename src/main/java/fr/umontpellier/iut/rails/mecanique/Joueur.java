@@ -11,6 +11,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.*;
@@ -72,6 +73,13 @@ public class Joueur implements IJoueur {
      */
     private int nbPionsBateauEnReserve;
 
+    /**
+     * Nombre de pions Ports que le joueur possède
+     * */
+    private IntegerProperty nbPionsPort;
+
+    private ListChangeListener<Ville> listenerPortsPossedes;
+
     public Joueur(String nom, Jeu jeu, CouleurJoueur couleur) {
         this.nom =  new SimpleObjectProperty<>(nom);
         this.jeu = jeu;
@@ -86,6 +94,17 @@ public class Joueur implements IJoueur {
         this.cartesTransportPosees = FXCollections.observableArrayList();
         this.destinations = FXCollections.observableArrayList();
         this.score = new SimpleIntegerProperty();
+
+        // bind nombre de ports
+        this.nbPionsPort = new SimpleIntegerProperty(3);
+        listenerPortsPossedes = change -> {
+            while ( change.next()){
+                if (change.wasAdded()){
+                    this.nbPionsPort.setValue(3 - ports.size());
+                }
+            }
+        };
+        ports.addListener(listenerPortsPossedes);
     }
 
     /**
@@ -113,6 +132,10 @@ public class Joueur implements IJoueur {
     }
     public IntegerProperty scoreProperty() {
         return score;
+    }
+
+    public IntegerProperty nbPionsPortProperty() {
+        return nbPionsPort;
     }
 
     /**
@@ -159,7 +182,6 @@ public class Joueur implements IJoueur {
     public List<CarteTransport> getCartesTransportPosees() {
         return cartesTransportPosees;
     }
-
 
     /**
      * Ajoute une carte transport à la main du joueur

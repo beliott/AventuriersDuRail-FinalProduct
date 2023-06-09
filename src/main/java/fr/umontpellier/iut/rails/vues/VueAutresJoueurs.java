@@ -48,7 +48,7 @@ public class VueAutresJoueurs extends StackPane {
 
         nbPionsBateaux.textProperty().bind(Bindings.concat(nbPionsBateaux.getText(),((Joueur)getJoueur(this.nomJoueur.getText())).nbPionsBateauxProperty()));
         //nbPionsBateaux.setText(nbPionsBateaux.getText().concat("40"));
-        nbPorts.setText(nbPorts.getText().concat("30"));
+        nbPorts.textProperty().bind(Bindings.concat(nbPorts.getText(), getJoueur(this.nomJoueur.getText()).nbPionsPortProperty()));
 
         nbPionsWagons.textProperty().bind(Bindings.concat(nbPionsWagons.getText(),((Joueur)getJoueur(this.nomJoueur.getText())).nbPionsWagonsProperty()));
         //nbPionsWagons.setText(nbPionsWagons.getText().concat("20"));

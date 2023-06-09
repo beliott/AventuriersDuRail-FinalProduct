@@ -57,12 +57,13 @@ public class VueDuJeu extends VBox {
             if (change.wasAdded()) {
                 for (IDestination iDestination : change.getAddedSubList()) {
                     Button b = new Button();
-                    Image bground = new Image("destination.jpg");
+                    // TODO : vérifier ca car fait bugger
+                    /* Image bground = new Image("destination.jpg");
                     BackgroundImage background = new BackgroundImage(bground,
                             BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
                             BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
                     Background backgroundImage = new Background(background);
-                    b.setBackground(backgroundImage);
+                    b.setBackground(backgroundImage); */
                     BorderPane v = new BorderPane();
                     BorderPane h1 = new BorderPane();
                     BorderPane h2 = new BorderPane();

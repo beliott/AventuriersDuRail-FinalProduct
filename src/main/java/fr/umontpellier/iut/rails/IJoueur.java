@@ -23,6 +23,8 @@ public interface IJoueur {
     int getScore();
     public IntegerProperty scoreProperty();
 
+    public IntegerProperty nbPionsPortProperty();
+
     enum CouleurJoueur {
         JAUNE, ROUGE, BLEU, VERT, ROSE
     }

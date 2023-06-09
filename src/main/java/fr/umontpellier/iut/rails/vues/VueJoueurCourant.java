@@ -103,10 +103,11 @@ public class VueJoueurCourant extends BorderPane {
             if (nbPionsWagons.textProperty().isBound()){
                 nbPionsWagons.textProperty().unbind();
                 nbPionsBateaux.textProperty().unbind();
+                nbPorts.textProperty().unbind();
             }
             nbPionsWagons.textProperty().bind(newJ.nbPionsWagonsProperty().asString());
             nbPionsBateaux.textProperty().bind(newJ.nbPionsBateauxProperty().asString());
-            nbPorts.setText("" + (3 - newJ.getNbPorts())); // TODO : bind pour que ca soit correct
+            nbPorts.textProperty().bind(newJ.nbPionsPortProperty().asString());
 
 
 
