@@ -11,9 +11,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
@@ -120,11 +118,24 @@ public class VueDuJeu extends VBox {
         //container.prefWidthProperty().bind(partieBasDroite.prefWidthProperty());
 
 
-
-
+        TextField saisieNbPions = new TextField();
+        saisieNbPions.setMaxWidth(50);
+        Button valider = new Button("Valider");
+        valider.setOnMouseClicked(mouseEvent -> {
+            if (!saisieNbPions.getText().equals("")){
+                jeu.leNombreDePionsSouhaiteAEteRenseigne(saisieNbPions.getText());
+                saisieNbPions.clear();
+            }
+        });
+        HBox saisiePions = new HBox(saisieNbPions, valider);
         /* Affichage en bas */
         partieBas = new BorderPane();
-        partieBas.setLeft(listeDestination);
+        VBox test = new VBox(saisiePions, listeDestination);
+        //partieBas.setLeft(listeDestination);
+        partieBas.setLeft(test);
+        //partieBas.getChildren().add(saisiePions);
+        // TEST AJOUT POUR NBPIONS
+
         partieBas.setRight(partieBasDroite);
         partieBas.setPadding(new Insets(20,0,10,0));
         setBackGround();
@@ -176,13 +187,12 @@ public class VueDuJeu extends VBox {
                 if (change.wasAdded()) {
                     for (IDestination iDestination : change.getAddedSubList()) {
                         Button b = new Button();
-                        // TODO : vérifier ca car fait bugger
-                    /* Image bground = new Image("destination.jpg");
+                    Image bground = new Image("destination.jpg");
                     BackgroundImage background = new BackgroundImage(bground,
                             BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
                             BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
                     Background backgroundImage = new Background(background);
-                    b.setBackground(backgroundImage); */
+                    b.setBackground(backgroundImage);
                         BorderPane v = new BorderPane();
                         BorderPane h1 = new BorderPane();
                         BorderPane h2 = new BorderPane();
