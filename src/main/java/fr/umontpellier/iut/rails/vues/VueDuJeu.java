@@ -52,53 +52,6 @@ public class VueDuJeu extends VBox {
 
     private BorderPane partieBas;
 
-    private final ListChangeListener<IDestination> toto = change -> {
-        while (change.next()) {
-            if (change.wasAdded()) {
-                for (IDestination iDestination : change.getAddedSubList()) {
-                    Button b = new Button();
-                    // TODO : vérifier ca car fait bugger
-                    /* Image bground = new Image("destination.jpg");
-                    BackgroundImage background = new BackgroundImage(bground,
-                            BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
-                            BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
-                    Background backgroundImage = new Background(background);
-                    b.setBackground(backgroundImage); */
-                    BorderPane v = new BorderPane();
-                    BorderPane h1 = new BorderPane();
-                    BorderPane h2 = new BorderPane();
-                    v.setTop(h1);
-                    v.setBottom(h2);
-                    Label valeur = new Label();
-                    Label ville1= new Label(iDestination.getVilles().get(0));
-                    Label ville2 = new Label(iDestination.getVilles().get(iDestination.getVilles().size()-1));
-                    h1.setLeft(ville1);
-                    h1.setRight(valeur);
-                    h2.setRight(ville2);
-                    v.setPrefSize(200,200);
-                    if (iDestination.getVilles().size() <= 2){
-                        valeur.setText(String.valueOf(iDestination.getValeur()));
-                    }
-                    else {
-                        valeur.setText(String.valueOf(iDestination.getValeurMax()));
-                    }
-                    b.setPrefSize(150,75);
-                    b.setGraphic(v);
-                    valeur.setStyle("-fx-font-size: 25px");
-                    b.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-                    listeDestination.setSpacing(10);
-                    b.setId(iDestination.getNom());
-                    listeDestination.getChildren().add(b);
-                }
-            } else if (change.wasRemoved()) {
-                for (IDestination iDestination : change.getRemoved()) {
-                    listeDestination.getChildren().remove(removeDestination(iDestination));
-                }
-            }
-    };
-
-};
-
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
         plateau = new VuePlateau();
@@ -122,7 +75,6 @@ public class VueDuJeu extends VBox {
 
 
         listeDestination = new HBox();
-        jeu.destinationsInitialesProperty().addListener(toto);
         listeDestination.setAlignment(Pos.CENTER);
         listeDestination.prefWidthProperty().bind(plateau.prefWidthProperty());
 
@@ -217,10 +169,62 @@ public class VueDuJeu extends VBox {
         listeDestination.prefHeightProperty().bind(jCourant.prefHeightProperty().divide(5));*/
 
 
+        /* pour defausser des cartes destinations */
+
+        ListChangeListener<IDestination> toto = change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    for (IDestination iDestination : change.getAddedSubList()) {
+                        Button b = new Button();
+                        // TODO : vérifier ca car fait bugger
+                    /* Image bground = new Image("destination.jpg");
+                    BackgroundImage background = new BackgroundImage(bground,
+                            BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
+                            BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+                    Background backgroundImage = new Background(background);
+                    b.setBackground(backgroundImage); */
+                        BorderPane v = new BorderPane();
+                        BorderPane h1 = new BorderPane();
+                        BorderPane h2 = new BorderPane();
+                        v.setTop(h1);
+                        v.setBottom(h2);
+                        Label valeur = new Label();
+                        Label ville1 = new Label(iDestination.getVilles().get(0));
+                        Label ville2 = new Label(iDestination.getVilles().get(iDestination.getVilles().size() - 1));
+                        h1.setLeft(ville1);
+                        h1.setRight(valeur);
+                        h2.setRight(ville2);
+                        v.setPrefSize(200, 200);
+                        if (iDestination.getVilles().size() <= 2) {
+                            valeur.setText(String.valueOf(iDestination.getValeur()));
+                        } else {
+                            valeur.setText(String.valueOf(iDestination.getValeurMax()));
+                        }
+                        b.setPrefSize(150, 75);
+                        b.setGraphic(v);
+                        valeur.setStyle("-fx-font-size: 25px");
+                        b.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+                        listeDestination.setSpacing(10);
+                        b.setId(iDestination.getNom());
+                        b.setOnMouseClicked(mouseEvent -> {
+                            jeu.uneDestinationAEteChoisie(iDestination);
+                        });
+                        listeDestination.getChildren().add(b);
+                    }
+                } else if (change.wasRemoved()) {
+                    for (IDestination iDestination : change.getRemoved()) {
+                        listeDestination.getChildren().remove(removeDestination(iDestination));
+                    }
+                }
+            }
+        }; jeu.destinationsInitialesProperty().addListener(toto);
+
+
         plateau.creerBindings();
         jCourant.creerbindings();
 
 
+        /* pour VueAutresJoueurs */
         for (VueAutresJoueurs v : jPasCourant){
             v.creerBinding();
         }
