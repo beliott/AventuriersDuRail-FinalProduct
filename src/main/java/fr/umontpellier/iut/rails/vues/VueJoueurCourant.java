@@ -34,7 +34,7 @@ public class VueJoueurCourant extends BorderPane {
     private Label dest, nbPionsWagons, nbPionsBateaux, nbPorts;
 
     public VueJoueurCourant(IJoueur joueurCourant) {
-        this.scoreJoueur = new Label("TEST");
+        this.scoreJoueur = new Label("Score :");
         this.scoreJoueur.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
         this.dest = new Label("Destinations");
         this.nomJoueur = new Label();
@@ -86,7 +86,7 @@ public class VueJoueurCourant extends BorderPane {
 
         ChangeListener<IJoueur> joueurCourantListener = (observableValue, oldJ, newJ) -> {
             //this.setStyle("-fx-background-color: " + traduceColor(newJ.getCouleur())); // background
-            scoreJoueur.setText("Score : "+ newJ.getScore()); // verif si il faut pas faire avec property
+            scoreJoueur.textProperty().bind(Bindings.concat("Score : ", newJ.scoreProperty()));
 
             nomJoueur.setText(newJ.getNom());
             // Les cartes transport

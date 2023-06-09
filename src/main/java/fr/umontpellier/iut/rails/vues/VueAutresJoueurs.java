@@ -45,13 +45,14 @@ public class VueAutresJoueurs extends StackPane {
         return null;
     }
     public void creerBinding(){
+        score.textProperty().bind(Bindings.concat(score.getText(), getJoueur(this.nomJoueur.getText()).scoreProperty()));
 
         nbPionsBateaux.textProperty().bind(Bindings.concat(nbPionsBateaux.getText(),((Joueur)getJoueur(this.nomJoueur.getText())).nbPionsBateauxProperty()));
-        //nbPionsBateaux.setText(nbPionsBateaux.getText().concat("40"));
+
         nbPorts.textProperty().bind(Bindings.concat(nbPorts.getText(), getJoueur(this.nomJoueur.getText()).nbPionsPortProperty()));
 
         nbPionsWagons.textProperty().bind(Bindings.concat(nbPionsWagons.getText(),((Joueur)getJoueur(this.nomJoueur.getText())).nbPionsWagonsProperty()));
-        //nbPionsWagons.setText(nbPionsWagons.getText().concat("20"));
+
         scoreAffichage.getChildren().addAll(score,nbPionsBateaux,nbPionsWagons,nbPorts);
         scoreAffichage.setVisible(false);
         scoreAffichage.setStyle("-fx-background-color: #6F4E37; -fx-text-fill: white; -fx-font-size: 15px; " +
