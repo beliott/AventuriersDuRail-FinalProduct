@@ -7,10 +7,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 /**
  * Cette classe présente les éléments des joueurs autres que le joueur courant,
@@ -28,11 +26,14 @@ public class VueAutresJoueurs extends StackPane {
     public VueAutresJoueurs(String nomJoueur) {
         this.nomJoueur = new Label(nomJoueur);
         this.score = new Label("Score : ");
-        this.nbPionsWagons = new Label("Pions Wagons : " );
-        this.nbPionsBateaux = new Label("Pions Bateaux : ");
-        this.nbPorts = new Label("Nombre de ports : ");
+        this.nbPionsWagons = new Label("Wagons : " );
+        this.nbPionsBateaux = new Label("Bateaux : ");
+        this.nbPorts = new Label("Ports : ");
         this.scoreAffichage  = new VBox();
         this.getChildren().addAll(scoreAffichage,this.nomJoueur);
+        this.nomJoueur.setStyle("-fx-font-weight: bold;");
+        this.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
+
 
     }
 
@@ -44,6 +45,7 @@ public class VueAutresJoueurs extends StackPane {
         return null;
     }
     public void creerBinding(){
+
         nbPionsBateaux.textProperty().bind(Bindings.concat(nbPionsBateaux.getText(),((Joueur)getJoueur(this.nomJoueur.getText())).nbPionsBateauxProperty()));
         //nbPionsBateaux.setText(nbPionsBateaux.getText().concat("40"));
         nbPorts.setText(nbPorts.getText().concat("30"));
@@ -51,15 +53,12 @@ public class VueAutresJoueurs extends StackPane {
         nbPionsWagons.textProperty().bind(Bindings.concat(nbPionsWagons.getText(),((Joueur)getJoueur(this.nomJoueur.getText())).nbPionsWagonsProperty()));
         //nbPionsWagons.setText(nbPionsWagons.getText().concat("20"));
         scoreAffichage.getChildren().addAll(score,nbPionsBateaux,nbPionsWagons,nbPorts);
-        nbPionsBateaux.setAlignment(Pos.TOP_CENTER);
-        nbPionsWagons.setAlignment(Pos.CENTER);
-        nbPorts.setAlignment(Pos.BOTTOM_CENTER);
         scoreAffichage.setVisible(false);
-        scoreAffichage.setStyle("-fx-background-color: #6F4E37; -fx-text-fill: white; -fx-font-size: 20px; " +
-                "-fx-padding: 10px; -fx-border-color: #543A29; -fx-border-width: 2px; " +
+        scoreAffichage.setStyle("-fx-background-color: #6F4E37; -fx-text-fill: white; -fx-font-size: 15px; " +
+                "-fx-padding: 3px; -fx-border-color: #543A29; -fx-border-width: 2px; " +
                 "-fx-border-radius: 5px; -fx-background-radius: 5px; " +
-                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);");
-
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);" +
+                "-fx-font-weight: bold;");
 
         this.setOnMouseEntered(event -> {
             scoreAffichage.setVisible(true);

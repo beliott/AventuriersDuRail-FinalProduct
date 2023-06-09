@@ -11,9 +11,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+
+import static javafx.scene.paint.Color.BLACK;
 
 /**
  * Cette classe présente les éléments appartenant au joueur courant.
@@ -31,12 +35,13 @@ public class VueJoueurCourant extends BorderPane {
 
     public VueJoueurCourant(IJoueur joueurCourant) {
         this.scoreJoueur = new Label("TEST");
-
+        this.scoreJoueur.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
         this.dest = new Label("Destinations");
         this.nomJoueur = new Label();
+        this.nomJoueur.setStyle("-fx-font-size: 40px; -fx-font-family:IMFeENsc28P");
         this.lesCartesDuJoueur = new FlowPane(); lesCartesDuJoueur.setHgap(20); lesCartesDuJoueur.setVgap(20); lesCartesDuJoueur.setPadding(new Insets(20, 20 ,20 ,20));
-        VBox centre = new VBox(this.nomJoueur, this.lesCartesDuJoueur);
-
+        VBox centre = new VBox(this.nomJoueur,this.lesCartesDuJoueur);
+        this.setBorder(new Border(new BorderStroke(BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
         ImageView imgW = new ImageView("images/bouton-pions-wagon.png");
         imgW.setPreserveRatio(true); imgW.setFitWidth(30);
         this.nbPionsWagons = new Label();
@@ -48,12 +53,16 @@ public class VueJoueurCourant extends BorderPane {
         this.nbPorts = new Label();
         HBox bas = new HBox(dest, imgW, nbPionsWagons, imgB, nbPionsBateaux, imgP, nbPorts);
         bas.setSpacing(10); bas.setAlignment(Pos.CENTER);
-
-
-        this.setTop(scoreJoueur);
+        bas.setBorder(new Border(new BorderStroke(BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0.3))));
+        this.nbPorts.setStyle("-fx-font-weight: bold;");
+        this.nbPionsBateaux.setStyle("-fx-font-weight: bold;");
+        this.nbPionsWagons.setStyle("-fx-font-weight: bold;");
+        BorderPane b = new BorderPane();
+        this.setTop(b);
+        b.setRight(scoreJoueur);
         this.setCenter(centre);
         this.setBottom(bas);
-
+        this.setStyle("-fx-background-color: #FFC9A3");
     }
 
     public String traduceColor(IJoueur.CouleurJoueur c){
@@ -76,7 +85,7 @@ public class VueJoueurCourant extends BorderPane {
     public void creerbindings(){
 
         ChangeListener<IJoueur> joueurCourantListener = (observableValue, oldJ, newJ) -> {
-            this.setStyle("-fx-background-color: " + traduceColor(newJ.getCouleur())); // background
+            //this.setStyle("-fx-background-color: " + traduceColor(newJ.getCouleur())); // background
             scoreJoueur.setText("Score : "+ newJ.getScore()); // verif si il faut pas faire avec property
 
             nomJoueur.setText(newJ.getNom());
@@ -98,6 +107,7 @@ public class VueJoueurCourant extends BorderPane {
             nbPionsWagons.textProperty().bind(newJ.nbPionsWagonsProperty().asString());
             nbPionsBateaux.textProperty().bind(newJ.nbPionsBateauxProperty().asString());
             nbPorts.setText("" + (3 - newJ.getNbPorts())); // TODO : bind pour que ca soit correct
+
 
 
         };
