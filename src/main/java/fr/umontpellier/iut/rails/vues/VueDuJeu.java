@@ -49,6 +49,8 @@ public class VueDuJeu extends VBox {
     private HBox plateauEtJoueur;
 
     private BorderPane partieBas;
+    private VBox saisiePionBox;
+    private Label actionARealiser;
 
     private ImageView dosWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
     private ImageView dosBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
@@ -69,7 +71,7 @@ public class VueDuJeu extends VBox {
 
         /* DEBUT EN COURS AVEC MONSIEUR NADAL*/
         //4
-        Label actionARealiser = new Label();
+        this.actionARealiser = new Label();
         actionARealiser.textProperty().bind(jeu.instructionProperty());
         actionARealiser.setStyle("-fx-text-fill: white;-fx-font-family: Chilanka; -fx-font-size: 25px;-fx-font-weight: bold; ");
         actionARealiser.setPadding(new Insets(10,0,0,60));
@@ -149,17 +151,18 @@ public class VueDuJeu extends VBox {
         HBox saisiePions = new HBox(saisieNbPions, valider);
         /* Affichage en bas */
         partieBas = new BorderPane();
-        VBox test = new VBox(saisiePions);
-        test.getChildren().add(cartesPiochables);
-        test.setPadding(new Insets(0,0,0,80));
+        this.saisiePionBox= new VBox(saisiePions);
+        saisiePionBox.getChildren().add(cartesPiochables);
+        saisiePionBox.setPadding(new Insets(0,0,0,80));
         //partieBas.setLeft(listeDestination);
-        partieBas.setTop(test);
+        partieBas.setTop(saisiePionBox);
         partieBas.setCenter(listeDestination);
         //partieBas.getChildren().add(saisiePions);
         // TEST AJOUT POUR NBPIONS
-
         partieBas.setRight(partieBasDroite);
         partieBas.setPadding(new Insets(20,0,10,0));
+
+
         setBackGround();
         this.getChildren().addAll( actionARealiser, plateauEtJoueur,partieBas);
     }
@@ -280,6 +283,18 @@ public class VueDuJeu extends VBox {
             parent.getChildren().add(vueDelAncien);
         };
         this.jeu.joueurCourantProperty().addListener(listenerJoueurAffichage);
+
+        actionARealiser.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Inversion de la visibilité des conteneurs
+            if (saisiePionBox.isVisible()){
+                saisiePionBox.setVisible(false);
+                listeDestination.setVisible(true);
+            }
+            else {
+                saisiePionBox.setVisible(true);
+                listeDestination.setVisible(false);
+            }
+        });
     }
 
     public IJeu getJeu() {
