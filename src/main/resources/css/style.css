@@ -9,3 +9,7 @@ Rectangle {
     -fx-fill: "transparent";/* dodgerblue a la base */
     -fx-stroke: "transparent"; /* blue a la base*/
 }
+.my-tooltip{
+    -fx-font-size: 30px; /* Modifiez la taille de la police selon besoins */
+    -fx-padding: 15px; /* Modifiez les marges intérieures selon besoins */
+}

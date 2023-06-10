@@ -4,10 +4,7 @@ import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
-import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
-import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -26,7 +23,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -54,6 +51,11 @@ public class VueDuJeu extends VBox {
     private VBox saisiePionBox;
     private Label actionARealiser;
     private HBox cartesPiochables;
+    private int nombreDeJoueurs;
+    private int indice;
+
+    private List<TextField> utile;
+    private List<String> nomDesJoueurs;
 
     private HBox container; // container des vues autres joueurs
 
@@ -74,6 +76,7 @@ public class VueDuJeu extends VBox {
     };
 
     public VueDuJeu(IJeu jeu) {
+        this.nomDesJoueurs = new ArrayList<>();
         this.jeu = jeu;
         plateau = new VuePlateau();
 
@@ -392,9 +395,9 @@ public class VueDuJeu extends VBox {
 
     private void affichageFinDePartie(){
         // Création des labels
-        Label titleLabel = new Label("La partie est terminée !");
-        titleLabel.setFont(Font.font("Arial", 30));
-        titleLabel.setTextFill(Color.WHITE);
+        Label titre = new Label("La partie est terminée !");
+        titre.setFont(Font.font("Arial", 30));
+        titre.setTextFill(Color.WHITE);
 
         Label winnerLabel = new Label("Le grand gagnant est : leNomDuGagnant");
         winnerLabel.setFont(Font.font("Arial", 20));
@@ -414,7 +417,7 @@ public class VueDuJeu extends VBox {
         rankingVBox.setSpacing(10);
 
         // container principale
-        HBox hboxMain = new HBox(titleLabel);
+        HBox hboxMain = new HBox(titre);
         hboxMain.setAlignment(Pos.CENTER);
 
         // Création de la VBox principale
@@ -426,6 +429,77 @@ public class VueDuJeu extends VBox {
         partieBas.setCenter(finJeu);
     }
 
+    public void debutDePartie(){
+        // Création des labels
+        Label titre = new Label("Bienvenue dans Les Aventuriers du Rail !");
+        titre.setFont(Font.font("Arial", 30));
+        titre.setTextFill(Color.WHITE);
+        HBox titrebox = new HBox();
+        titrebox.getChildren().add(titre);
+        titrebox.setAlignment(Pos.CENTER);
+
+        Label choixAFaire = new Label("Veuillez saisir le nombre de joueurs dans la partie");
+        choixAFaire.setFont(Font.font("Arial", 18));
+        choixAFaire.setTextFill(Color.WHITE);
+
+        // Création du champ de saisie du nombre de joueurs
+        TextField champSaisie= new TextField();
+        champSaisie.setPrefWidth(50);
+
+        // Création du bouton pour valider le nombre de joueurs
+        AtomicBoolean nbJoueurChoisis = new AtomicBoolean(false);
+        Button confirmer = new Button("Valider");
+        confirmer.setOnAction(e ->{
+            if (nbJoueurChoisis.get() == false){  // nombre de joueur choisis
+                if (champSaisie.getText().isEmpty()){
+                    return;
+                }
+                nombreDeJoueurs = Integer.parseInt(champSaisie.textProperty().getValue());
+                nbJoueurChoisis.set(true);
+                indice = 1;
+                choixAFaire.textProperty().setValue("Veuillez saisir le nom du joueur " +"j"+ indice);
+
+            }
+
+            if (indice <= nombreDeJoueurs){
+                if (champSaisie.textProperty().getValue().isEmpty()){
+                    return;
+                }
+                if (!this.nomDesJoueurs.isEmpty() && nomExisteDeja(champSaisie.textProperty().getValue())){
+                    champSaisie.setStyle("-fx-border-color: red;");
+                    champSaisie.setText("");
+                    champSaisie.setPromptText("Nom déjà utilisé");
+                    return;
+                }
+                champSaisie.setStyle("");
+                champSaisie.setPromptText("");
+                choixAFaire.textProperty().setValue("Veuillez saisir le nom du joueur " +"j"+ indice);
+                indice++;
+                nomDesJoueurs.add(champSaisie.textProperty().getValue());
+            }
+        });
+
+        // Création de la VBox pour le nombre de joueurs
+        VBox boxJoueur = new VBox(choixAFaire, champSaisie, confirmer);
+        boxJoueur.setAlignment(Pos.CENTER);
+        boxJoueur.setSpacing(10);
+
+        Button boutonCommencer = new Button("Commencer la partie");
+
+        VBox debutGame = new VBox(titrebox, boxJoueur,boutonCommencer);
+        debutGame.setSpacing(20);
+        debutGame.setPadding(new Insets(20));
+        debutGame.getStyleClass().add("tooltip");
+        partieBas.setCenter(debutGame);
+    }
+    private boolean nomExisteDeja(String s) {
+        for (String a: nomDesJoueurs) {
+            if (a.equals(s)){
+                return true;
+            }
+        }
+        return false;
+    }
     EventHandler<? super MouseEvent> actionPasserParDefaut = (mouseEvent -> getJeu().passerAEteChoisi());
 
     public VuePlateau getPlateau() {
