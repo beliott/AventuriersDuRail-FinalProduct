@@ -14,6 +14,8 @@ public interface ICarteTransport {
     boolean estDouble();
     String getStringCouleur();
 
+    String getNom();
+
     static List<String> getCouleursSimples() {
         return Stream.of(Couleur.values()).filter(c -> c != Couleur.GRIS).map(Objects::toString).toList();
     }

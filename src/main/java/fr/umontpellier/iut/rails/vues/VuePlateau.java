@@ -2,6 +2,7 @@ package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.IRoute;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,11 +41,11 @@ public class VuePlateau extends Pane {
     }
 
     EventHandler<MouseEvent> choixRoute = event -> {
-        System.out.println("On a cliqué sur une route");
+        ((VueDuJeu) getScene().getRoot()).getJeu().uneRouteAEteChoisie(((Rectangle)event.getSource()).getId());
     };
 
     EventHandler<MouseEvent> choixPort = event -> {
-        System.out.println("On a cliqué sur un port");
+        ((VueDuJeu) getScene().getRoot()).getJeu().unPortAEteChoisi(((Circle)event.getSource()).getId());
     };
 
     public void creerBindings() {
@@ -66,10 +67,15 @@ public class VuePlateau extends Pane {
     }
 
     private void ajouterRoutes() {
+        ChangeListener<IRoute> proprioChangeListener = (observableValue, oldR, newR) -> {
+            // TODO: remplir
+        };
+
         List<? extends IRoute> listeRoutes = ((VueDuJeu) getScene().getRoot()).getJeu().getRoutes();
         for (String nomRoute : DonneesGraphiques.routes.keySet()) {
             ArrayList<DonneesGraphiques.DonneesSegments> segmentsRoute = DonneesGraphiques.routes.get(nomRoute);
             IRoute route = listeRoutes.stream().filter(r -> r.getNom().equals(nomRoute)).findAny().orElse(null);
+            // TODO : ajouter un listener a chacune des routes
             for (DonneesGraphiques.DonneesSegments unSegment : segmentsRoute) {
                 Rectangle rectangleSegment = new Rectangle(unSegment.getXHautGauche(), unSegment.getYHautGauche(), DonneesGraphiques.largeurRectangle, DonneesGraphiques.hauteurRectangle);
                 rectangleSegment.setId(nomRoute);

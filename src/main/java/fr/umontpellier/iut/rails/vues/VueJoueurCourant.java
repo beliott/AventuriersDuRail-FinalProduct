@@ -1,6 +1,7 @@
 package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.ICarteTransport;
+import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.mecanique.data.Couleur;
 import javafx.beans.binding.Bindings;
@@ -83,6 +84,7 @@ public class VueJoueurCourant extends BorderPane {
         return "gray";
     }
     public void creerbindings(){
+        IJeu leJeu = ((VueDuJeu) getScene().getRoot()).getJeu();
 
         ChangeListener<IJoueur> joueurCourantListener = (observableValue, oldJ, newJ) -> {
             //this.setStyle("-fx-background-color: " + traduceColor(newJ.getCouleur())); // background
@@ -92,11 +94,13 @@ public class VueJoueurCourant extends BorderPane {
             // Les cartes transport
             lesCartesDuJoueur.getChildren().clear();
             for (ICarteTransport c: newJ.getCartesTransport()) {
-                String lienCarte = getlinkImage(c);
-                ImageView imgCarte = new ImageView(lienCarte);
-                imgCarte.setPreserveRatio(true); // on preserve ses proportions
-                imgCarte.setFitWidth(100);
-                lesCartesDuJoueur.getChildren().add(imgCarte);
+                // TEST
+                VueCarteTransport v = new VueCarteTransport(c);
+                v.setOnMouseClicked(mouseEvent -> {
+                    leJeu.uneCarteDuJoueurEstJouee(v.getCarteTransport());
+                });
+
+                lesCartesDuJoueur.getChildren().add(v);
             }
 
             //Partie BOX
@@ -112,26 +116,6 @@ public class VueJoueurCourant extends BorderPane {
 
 
         };
-        ((VueDuJeu) getScene().getRoot()).getJeu().joueurCourantProperty().addListener(joueurCourantListener); // cf. la fin du readme
-    }
-
-    public String getlinkImage(ICarteTransport c){
-        String rep = "/images/cartesWagons/carte-";
-        if (c.estDouble())
-            rep +="DOUBLE-";
-        else if (c.estJoker())
-            rep+="JOKER-";
-        else if (c.estBateau())
-            rep+="BATEAU-";
-        else if (c.estWagon())
-            rep+="WAGON-";
-
-        rep+=c.getStringCouleur();
-
-        if (c.getAncre())
-            rep+="-A";
-        rep+=".png";
-
-        return rep;
+        leJeu.joueurCourantProperty().addListener(joueurCourantListener); // cf. la fin du readme
     }
 }

@@ -50,16 +50,29 @@ public class VueDuJeu extends VBox {
 
     private BorderPane partieBas;
 
+    private ImageView dosWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
+    private ImageView dosBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
+    private ImageView dosDestination = new ImageView("images/cartesWagons/destinations.png");
+    EventHandler<MouseEvent> mouseEventPiocherCarteWagon = mouseEvent -> {
+        getJeu().uneCarteWagonAEtePiochee();
+    };
+    EventHandler<MouseEvent> mouseEventPiocherCarteBateau = mouseEvent -> {
+        getJeu().uneCarteBateauAEtePiochee();
+    };
+    EventHandler<MouseEvent> mouseEventPiocheDestinations = mouseEvent -> {
+        getJeu().nouvelleDestinationDemandee();
+    };
+
     public VueDuJeu(IJeu jeu) {
         this.jeu = jeu;
         plateau = new VuePlateau();
 
+        /* DEBUT EN COURS AVEC MONSIEUR NADAL*/
         //4
         Label actionARealiser = new Label();
         actionARealiser.textProperty().bind(jeu.instructionProperty());
         actionARealiser.setStyle("-fx-text-fill: white;-fx-font-family: Chilanka; -fx-font-size: 25px;-fx-font-weight: bold; ");
         actionARealiser.setPadding(new Insets(10,0,0,60));
-
         //3 Bouton passer
         Button passer = new Button("Passer");
         passer.setStyle("-fx-background-color: #0078B8; -fx-text-fill: white; -fx-font-size: 14px;-fx-font-weight: bold;");
@@ -70,12 +83,9 @@ public class VueDuJeu extends VBox {
         passer.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> passer.setEffect(dropShadow));
         passer.addEventHandler(MouseEvent.MOUSE_EXITED, event -> passer.setEffect(null));
 
-
-
         listeDestination = new HBox();
         listeDestination.setAlignment(Pos.CENTER);
         listeDestination.prefWidthProperty().bind(plateau.prefWidthProperty());
-
         // 8
         jCourant = new VueJoueurCourant(jeu.joueurCourantProperty().get());
         HBox h1 = new HBox(plateau);
@@ -98,6 +108,13 @@ public class VueDuJeu extends VBox {
 
         /* Test regler ratio pions */
 
+        /* piocher cartes */
+        HBox cartesPiochables = new HBox(dosWagon, dosBateau, dosDestination);
+        cartesPiochables.setSpacing(20); cartesPiochables.setAlignment(Pos.BASELINE_LEFT);
+        dosWagon.setPreserveRatio(true); dosWagon.setFitHeight(100); dosWagon.setOnMouseClicked(mouseEventPiocherCarteWagon);
+        dosBateau.setPreserveRatio(true); dosBateau.setFitHeight(100); dosBateau.setOnMouseClicked(mouseEventPiocherCarteBateau);
+        dosDestination.setPreserveRatio(true); dosDestination.setFitWidth(100); dosDestination.setOnMouseClicked(mouseEventPiocheDestinations);
+        // TODO : ajouter ca et tester !
 
 
         /* Affichage en bas a droite */
@@ -127,10 +144,13 @@ public class VueDuJeu extends VBox {
                 saisieNbPions.clear();
             }
         });
+
+        //jeu.unPortAEteChoisi();
         HBox saisiePions = new HBox(saisieNbPions, valider);
         /* Affichage en bas */
         partieBas = new BorderPane();
         VBox test = new VBox(saisiePions);
+        test.getChildren().add(cartesPiochables);
         test.setPadding(new Insets(0,0,0,80));
         //partieBas.setLeft(listeDestination);
         partieBas.setTop(test);
