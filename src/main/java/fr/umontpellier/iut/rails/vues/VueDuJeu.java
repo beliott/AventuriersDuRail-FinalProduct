@@ -5,6 +5,7 @@ import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
+import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -19,6 +20,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 
 import java.util.ArrayList;
@@ -202,6 +205,7 @@ public class VueDuJeu extends VBox {
         setBackGround();
         this.getChildren().addAll( actionARealiser, plateauEtJoueur,partieBas);
     }
+
     public void setBackGround(){
         Image bground = new Image("bground.jpg");
         BackgroundImage background = new BackgroundImage(bground,
@@ -383,6 +387,42 @@ public class VueDuJeu extends VBox {
 
     public IJeu getJeu() {
         return jeu;
+    }
+
+    private void affichageFinDePartie(){
+        // Création des labels
+        Label titleLabel = new Label("La partie est terminée !");
+        titleLabel.setFont(Font.font("Arial", 30));
+        titleLabel.setTextFill(Color.WHITE);
+
+        Label winnerLabel = new Label("Le grand gagnant est : leNomDuGagnant");
+        winnerLabel.setFont(Font.font("Arial", 20));
+        winnerLabel.setTextFill(Color.WHITE);
+
+        Label rankingLabel = new Label("Classement des joueurs :");
+        rankingLabel.setFont(Font.font("Arial", 18));
+        rankingLabel.setTextFill(Color.WHITE);
+
+        Label player1Label = new Label("Joueur 1 : 100 points");
+        Label player2Label = new Label("Joueur 2 : 80 points");
+        Label player3Label = new Label("Joueur 3 : 120 points");
+
+        // classement vbox
+        VBox rankingVBox = new VBox(rankingLabel, player1Label, player2Label, player3Label);
+        rankingVBox.setAlignment(Pos.CENTER_LEFT);
+        rankingVBox.setSpacing(10);
+
+        // container principale
+        HBox hboxMain = new HBox(titleLabel);
+        hboxMain.setAlignment(Pos.CENTER);
+
+        // Création de la VBox principale
+        VBox finJeu = new VBox(hboxMain, winnerLabel, rankingVBox);
+
+        finJeu.setSpacing(20);
+        finJeu.setPadding(new Insets(20));
+        finJeu.getStyleClass().add("tooltip");
+        partieBas.setCenter(finJeu);
     }
 
     EventHandler<? super MouseEvent> actionPasserParDefaut = (mouseEvent -> getJeu().passerAEteChoisi());
