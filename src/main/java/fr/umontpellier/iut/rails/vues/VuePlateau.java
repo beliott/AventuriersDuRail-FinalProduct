@@ -2,6 +2,8 @@ package fr.umontpellier.iut.rails.vues;
 
 import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.IRoute;
+import fr.umontpellier.iut.rails.IVille;
+import fr.umontpellier.iut.rails.mecanique.data.Ville;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
@@ -65,6 +67,18 @@ public class VuePlateau extends Pane {
             getChildren().add(cerclePort);
             bindCerclePortAuPlateau(positionPortSurPlateau, cerclePort);
             cerclePort.setOnMouseClicked(choixPort);
+            for (IVille v : ((VueDuJeu) getScene().getRoot()).getJeu().getPorts()) {
+                if (v.getNom().equals(nomPort)) {
+
+                    ChangeListener<IJoueur> changementproprio = (observableValue, oldJ, newJ) -> {
+                        if (v.proprietaireProperty() != null){
+                            colorierPortPris(newJ, cerclePort);
+                        }
+                    };
+                    v.proprietaireProperty().addListener(changementproprio);
+                }
+            }
+
         }
     }
 
@@ -81,10 +95,9 @@ public class VuePlateau extends Pane {
                 rectangleSegment.setOnMouseClicked(choixRoute);
                 bindRectangle(rectangleSegment, unSegment.getXHautGauche(), unSegment.getYHautGauche());
             }
-            ChangeListener<IJoueur> proprioChangeListener = (observableValue, oldR, newR) -> {
+            ChangeListener<IJoueur> proprioChangeListener = (observableValue, oldJ, newJ) -> {
                 if(route.proprietaireProperty() != null){
-                    colorierRoutePrise(newR, route);
-                    System.out.println("ici");
+                    colorierRoutePrise(newJ, route);
                 }
             };
             route.proprietaireProperty().addListener(proprioChangeListener);
@@ -222,6 +235,21 @@ public class VuePlateau extends Pane {
             coloration.setRotate(d.getAngle());
             this.getChildren().add(coloration);
             bindRectangle(coloration, d.getXHautGauche(), d.getYHautGauche());
+        }
+    }
+
+    public void colorierPortPris (IJoueur joueurPrenantPort, Circle cerclePortPris){
+        String nomPortPris = cerclePortPris.getId();
+        for (IVille v : ((VueDuJeu) getScene().getRoot()).getJeu().getPorts()){
+            if (v.getNom().equals(nomPortPris)){
+                DonneesGraphiques.DonneesCerclesPorts positionPortSurPlateau = DonneesGraphiques.ports.get(nomPortPris);
+                Circle coloration = new Circle(positionPortSurPlateau.centreX(), positionPortSurPlateau.centreY(), DonneesGraphiques.rayonInitial);
+                coloration.setStyle("-fx-fill: " + traduceColor(joueurPrenantPort.getCouleur()) + "; -fx-stroke-width: 2px; -fx-stroke: black");
+                coloration.setId(v.getNom());
+                this.getChildren().add(coloration);
+                bindCerclePortAuPlateau(positionPortSurPlateau, coloration);
+
+            }
         }
     }
 }
