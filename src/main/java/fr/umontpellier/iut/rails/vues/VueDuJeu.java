@@ -4,6 +4,7 @@ import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -48,6 +49,8 @@ public class VueDuJeu extends VBox {
     private VBox saisiePionBox;
     private Label actionARealiser;
     private HBox cartesPiochables;
+
+    private HBox container; // container des vues autres joueurs
 
     private ImageView dosWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
     private ImageView dosBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
@@ -279,6 +282,11 @@ public class VueDuJeu extends VBox {
             }
             parent.getChildren().add(vueDelAncien);
         };
+
+
+
+
+
         this.jeu.joueurCourantProperty().addListener(listenerJoueurAffichage);
         actionARealiser.textProperty().addListener((observable, oldValue, newValue) -> {
             if (actionARealiser.getText().contains("destination")){
