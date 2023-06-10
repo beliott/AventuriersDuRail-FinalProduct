@@ -1,5 +1,6 @@
 package fr.umontpellier.iut.rails.vues;
 
+import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.IRoute;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ChangeListener;
@@ -9,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
@@ -67,15 +69,10 @@ public class VuePlateau extends Pane {
     }
 
     private void ajouterRoutes() {
-        ChangeListener<IRoute> proprioChangeListener = (observableValue, oldR, newR) -> {
-            // TODO: remplir
-        };
-
         List<? extends IRoute> listeRoutes = ((VueDuJeu) getScene().getRoot()).getJeu().getRoutes();
         for (String nomRoute : DonneesGraphiques.routes.keySet()) {
             ArrayList<DonneesGraphiques.DonneesSegments> segmentsRoute = DonneesGraphiques.routes.get(nomRoute);
             IRoute route = listeRoutes.stream().filter(r -> r.getNom().equals(nomRoute)).findAny().orElse(null);
-            // TODO : ajouter un listener a chacune des routes
             for (DonneesGraphiques.DonneesSegments unSegment : segmentsRoute) {
                 Rectangle rectangleSegment = new Rectangle(unSegment.getXHautGauche(), unSegment.getYHautGauche(), DonneesGraphiques.largeurRectangle, DonneesGraphiques.hauteurRectangle);
                 rectangleSegment.setId(nomRoute);
@@ -84,6 +81,13 @@ public class VuePlateau extends Pane {
                 rectangleSegment.setOnMouseClicked(choixRoute);
                 bindRectangle(rectangleSegment, unSegment.getXHautGauche(), unSegment.getYHautGauche());
             }
+            ChangeListener<IJoueur> proprioChangeListener = (observableValue, oldR, newR) -> {
+                if(route.proprietaireProperty() != null){
+                    colorierRoutePrise(newR, route);
+                    System.out.println("ici");
+                }
+            };
+            route.proprietaireProperty().addListener(proprioChangeListener);
         }
     }
 
@@ -182,15 +186,42 @@ public class VuePlateau extends Pane {
     }
 
 
-
-private void ajouterVilles() {
-    for (String nomVille : DonneesGraphiques.villes.keySet()) {
-        DonneesGraphiques.DonneesCerclesPorts positionVilleSurPlateau = DonneesGraphiques.villes.get(nomVille);
-        Circle cercleVille = new Circle(positionVilleSurPlateau.centreX(), positionVilleSurPlateau.centreY(), DonneesGraphiques.rayonInitial);
-        cercleVille.setId(nomVille);
-        getChildren().add(cercleVille);
-        bindCerclePortAuPlateau(positionVilleSurPlateau, cercleVille);
-        cercleVille.setOnMouseClicked(choixPort);
+    private void ajouterVilles() {
+        for (String nomVille : DonneesGraphiques.villes.keySet()) {
+            DonneesGraphiques.DonneesCerclesPorts positionVilleSurPlateau = DonneesGraphiques.villes.get(nomVille);
+            Circle cercleVille = new Circle(positionVilleSurPlateau.centreX(), positionVilleSurPlateau.centreY(), DonneesGraphiques.rayonInitial);
+            cercleVille.setId(nomVille);
+            getChildren().add(cercleVille);
+            bindCerclePortAuPlateau(positionVilleSurPlateau, cercleVille);
+            cercleVille.setOnMouseClicked(choixPort);
+        }
     }
-}
+    public String traduceColor(IJoueur.CouleurJoueur c){
+        if(c.equals(IJoueur.CouleurJoueur.BLEU))
+            return "cadetblue";
+        else if (c.equals(IJoueur.CouleurJoueur.JAUNE)) {
+            return "yellow";
+        }
+        else if (c.equals(IJoueur.CouleurJoueur.ROSE)) {
+            return "pink";
+        }
+        else if (c.equals(IJoueur.CouleurJoueur.ROUGE)) {
+            return "crimson";
+        }
+        else if (c.equals(IJoueur.CouleurJoueur.VERT)) {
+            return "yellowgreen";
+        }
+        return "gray";
+    }
+
+    public void colorierRoutePrise(IJoueur joueurPrenantRoute, IRoute routePrise){
+        for (DonneesGraphiques.DonneesSegments d : DonneesGraphiques.routes.get(routePrise.getNom())){
+            Rectangle coloration = new Rectangle(d.getXHautGauche(), d.getYHautGauche(), DonneesGraphiques.largeurRectangle, DonneesGraphiques.hauteurRectangle);
+            coloration.setStyle("-fx-fill: " + traduceColor(joueurPrenantRoute.getCouleur()) + "; -fx-stroke-width: 2px; -fx-stroke: black");
+            coloration.setId(routePrise.getNom());
+            coloration.setRotate(d.getAngle());
+            this.getChildren().add(coloration);
+            bindRectangle(coloration, d.getXHautGauche(), d.getYHautGauche());
+        }
+    }
 }

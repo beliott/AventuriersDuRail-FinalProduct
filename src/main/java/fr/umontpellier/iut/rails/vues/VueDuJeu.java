@@ -145,6 +145,7 @@ public class VueDuJeu extends VBox {
         //container.prefWidthProperty().bind(partieBasDroite.prefWidthProperty());
 
 
+
         TextField saisieNbPions = new TextField();
         saisieNbPions.setMaxWidth(50);
         Button valider = new Button("Valider");
