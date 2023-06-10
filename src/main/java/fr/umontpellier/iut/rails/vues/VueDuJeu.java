@@ -60,6 +60,7 @@ public class VueDuJeu extends VBox {
     };
     EventHandler<MouseEvent> mouseEventPiocheDestinations = mouseEvent -> {
         getJeu().nouvelleDestinationDemandee();
+        partieBas.setCenter(listeDestination);
     };
 
     public VueDuJeu(IJeu jeu) {
@@ -291,9 +292,12 @@ public class VueDuJeu extends VBox {
             if (actionARealiser.getText().contains("Début du tour")){
                 partieBas.getChildren().removeAll(saisiePionBox,listeDestination);
                 partieBas.setCenter(cartesPiochables);
+                cartesPiochables.setPadding(new Insets(0,0,0,60));
             }
 
         });
+
+
     }
 
     public IJeu getJeu() {
