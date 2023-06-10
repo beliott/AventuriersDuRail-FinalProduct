@@ -1,8 +1,10 @@
 package fr.umontpellier.iut.rails.vues;
 
+import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
+import fr.umontpellier.iut.rails.mecanique.data.CarteTransport;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -51,6 +53,8 @@ public class VueDuJeu extends VBox {
     private HBox cartesPiochables;
 
     private HBox container; // container des vues autres joueurs
+
+    private HBox cartesVisibles;
 
     private ImageView dosWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
     private ImageView dosBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
@@ -147,6 +151,37 @@ public class VueDuJeu extends VBox {
                 saisieNbPions.clear();
             }
         });
+
+        /* visibles */
+        cartesVisibles = new HBox();
+        ListChangeListener<ICarteTransport> cartesVisiblesChangement = change -> {
+            while (change.next()){
+                if (change.wasAdded()){
+
+                    for (ICarteTransport c : change.getAddedSubList()){
+                        VueCarteTransport vct = new VueCarteTransport(c);
+                        vct.setOnMouseClicked(mouseEvent -> {
+                            jeu.uneCarteTransportAEteChoisie(c);
+                        });
+                        cartesVisibles.getChildren().add(vct);
+                    }
+
+                }
+                if (change.wasRemoved()){
+                    for (ICarteTransport c : change.getRemoved()) {
+                        for (Node n : cartesVisibles.getChildren()){
+                            VueCarteTransport v = (VueCarteTransport) n;
+                            if (v.getCarteTransport().equals(c)){
+                                cartesVisibles.getChildren().remove(v);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        jeu.cartesTransportVisiblesProperty().addListener(cartesVisiblesChangement);
+        cartesPiochables.getChildren().add(cartesVisibles);
 
         //jeu.unPortAEteChoisi();
         HBox saisiePions = new HBox(saisieNbPions, valider);
@@ -304,8 +339,6 @@ public class VueDuJeu extends VBox {
             }
 
         });
-
-
     }
 
     public IJeu getJeu() {
