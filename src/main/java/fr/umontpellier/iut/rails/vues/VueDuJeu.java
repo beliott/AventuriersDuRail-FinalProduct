@@ -3,8 +3,6 @@ package fr.umontpellier.iut.rails.vues;
 import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
-import fr.umontpellier.iut.rails.mecanique.data.Destination;
-import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
@@ -13,7 +11,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -22,9 +19,8 @@ import javafx.scene.paint.Color;
 
 
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
-
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -51,6 +47,7 @@ public class VueDuJeu extends VBox {
     private BorderPane partieBas;
     private VBox saisiePionBox;
     private Label actionARealiser;
+    private HBox cartesPiochables;
 
     private ImageView dosWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
     private ImageView dosBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
@@ -111,7 +108,7 @@ public class VueDuJeu extends VBox {
         /* Test regler ratio pions */
 
         /* piocher cartes */
-        HBox cartesPiochables = new HBox(dosWagon, dosBateau, dosDestination);
+        this.cartesPiochables = new HBox(dosWagon, dosBateau, dosDestination);
         cartesPiochables.setSpacing(20); cartesPiochables.setAlignment(Pos.BASELINE_LEFT);
         dosWagon.setPreserveRatio(true); dosWagon.setFitHeight(100); dosWagon.setOnMouseClicked(mouseEventPiocherCarteWagon);
         dosBateau.setPreserveRatio(true); dosBateau.setFitHeight(100); dosBateau.setOnMouseClicked(mouseEventPiocherCarteBateau);
@@ -152,7 +149,6 @@ public class VueDuJeu extends VBox {
         /* Affichage en bas */
         partieBas = new BorderPane();
         this.saisiePionBox= new VBox(saisiePions);
-        saisiePionBox.getChildren().add(cartesPiochables);
         saisiePionBox.setPadding(new Insets(0,0,0,80));
         //partieBas.setLeft(listeDestination);
         partieBas.setTop(saisiePionBox);
@@ -283,10 +279,8 @@ public class VueDuJeu extends VBox {
             parent.getChildren().add(vueDelAncien);
         };
         this.jeu.joueurCourantProperty().addListener(listenerJoueurAffichage);
-
         actionARealiser.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Inversion de la visibilité des conteneurs
-            if (saisiePionBox.isVisible()){
+            if (actionARealiser.getText().contains("destination")){
                 saisiePionBox.setVisible(false);
                 listeDestination.setVisible(true);
             }
@@ -294,6 +288,11 @@ public class VueDuJeu extends VBox {
                 saisiePionBox.setVisible(true);
                 listeDestination.setVisible(false);
             }
+            if (actionARealiser.getText().contains("Début du tour")){
+                partieBas.getChildren().removeAll(saisiePionBox,listeDestination);
+                partieBas.setCenter(cartesPiochables);
+            }
+
         });
     }
 
