@@ -89,6 +89,7 @@ public class VueJoueurCourant extends BorderPane {
     public void creerbindings(){
         IJeu leJeu = ((VueDuJeu) getScene().getRoot()).getJeu();
 
+
         ChangeListener<IJoueur> joueurCourantListener = (observableValue, oldJ, newJ) -> {
             //this.setStyle("-fx-background-color: " + traduceColor(newJ.getCouleur())); // background
             scoreJoueur.textProperty().bind(Bindings.concat("Score : ", newJ.scoreProperty()));
@@ -96,7 +97,7 @@ public class VueJoueurCourant extends BorderPane {
             nomJoueur.setText(newJ.getNom());
             // Les cartes transport
             lesCartesDuJoueur.getChildren().clear();
-            for (ICarteTransport c: newJ.getCartesTransport()) {
+            /*for (ICarteTransport c: newJ.getCartesTransport()) {
                 // TEST
                 VueCarteTransport v = new VueCarteTransport(c);
                 v.setOnMouseClicked(mouseEvent -> {
@@ -104,7 +105,7 @@ public class VueJoueurCourant extends BorderPane {
                 });
 
                 lesCartesDuJoueur.getChildren().add(v);
-            }
+            }*/
 
             //Partie BOX
             if (nbPionsWagons.textProperty().isBound()){
@@ -159,13 +160,11 @@ public class VueJoueurCourant extends BorderPane {
                     }
                 }
             });
-
-
-
-
-
         };
         leJeu.joueurCourantProperty().addListener(joueurCourantListener); // cf. la fin du readme
+
+
+
     }
 
     public Label getDest() {
@@ -178,5 +177,9 @@ public class VueJoueurCourant extends BorderPane {
 
     public Label getNomJoueur() {
         return nomJoueur;
+    }
+
+    public Label getScoreJoueur() {
+        return scoreJoueur;
     }
 }

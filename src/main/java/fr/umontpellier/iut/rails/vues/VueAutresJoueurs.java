@@ -60,7 +60,16 @@ public class VueAutresJoueurs extends StackPane {
                 "-fx-border-radius: 5px; -fx-background-radius: 5px; " +
                 "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);" +
                 "-fx-font-weight: bold;");
+        this.score.setTextFill(Color.WHITE);
+        this.nbPionsBateaux.setTextFill(Color.WHITE);
+        this.nbPionsWagons.setTextFill(Color.WHITE);
+        this.nbPorts.setTextFill(Color.WHITE);
 
+        /* scoreAffichage.setStyle("-fx-background-color: #6F4E37; -fx-text-fill: white; -fx-font-size: 15px; " +
+                "-fx-padding: 3px; -fx-border-color: #543A29; -fx-border-width: 2px; " +
+                "-fx-border-radius: 5px; -fx-background-radius: 5px; " +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);" +
+                "-fx-font-weight: bold;");*/
         this.setOnMouseEntered(event -> {
             scoreAffichage.setVisible(true);
             this.nomJoueur.setVisible(false);

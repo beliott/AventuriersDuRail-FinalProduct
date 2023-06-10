@@ -48,7 +48,7 @@ public class VueDuJeu extends VBox {
     private HBox plateauEtJoueur;
 
     private BorderPane partieBas;
-    private VBox saisiePionBox;
+    private HBox saisiePionBox;
     private Label actionARealiser;
     private HBox cartesPiochables;
     private int nombreDeJoueurs;
@@ -58,9 +58,12 @@ public class VueDuJeu extends VBox {
     private List<String> nomDesJoueurs;
 
     private HBox container; // container des vues autres joueurs
+    private Button wagonsBouton;
+    private Button bateauxBouton;
+    private VBox partieBasDroite;
 
     private HBox cartesVisibles;
-
+    private StackPane stackpanePion;
     private ImageView dosWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
     private ImageView dosBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
     private ImageView dosDestination = new ImageView("images/cartesWagons/destinations.png");
@@ -123,7 +126,7 @@ public class VueDuJeu extends VBox {
 
         /* piocher cartes */
         this.cartesPiochables = new HBox(dosWagon, dosBateau, dosDestination);
-        cartesPiochables.setSpacing(20); cartesPiochables.setAlignment(Pos.BASELINE_LEFT);
+        cartesPiochables.setSpacing(20); cartesPiochables.setAlignment(Pos.BASELINE_CENTER);
         dosWagon.setPreserveRatio(true); dosWagon.setFitHeight(100); dosWagon.setOnMouseClicked(mouseEventPiocherCarteWagon);
         dosBateau.setPreserveRatio(true); dosBateau.setFitHeight(100); dosBateau.setOnMouseClicked(mouseEventPiocherCarteBateau);
         dosDestination.setPreserveRatio(true); dosDestination.setFitWidth(100); dosDestination.setOnMouseClicked(mouseEventPiocheDestinations);
@@ -132,7 +135,7 @@ public class VueDuJeu extends VBox {
 
         /* Affichage en bas a droite */
 
-        VBox partieBasDroite = new VBox();
+        this.partieBasDroite = new VBox();
         HBox container = new HBox();
         partieBasDroite.prefWidthProperty().bind(jCourant.prefWidthProperty());
         for (VueAutresJoueurs v : this.jPasCourant) {
@@ -196,10 +199,11 @@ public class VueDuJeu extends VBox {
         HBox saisiePions = new HBox(saisieNbPions, valider);
         /* Affichage en bas */
         partieBas = new BorderPane();
-        this.saisiePionBox= new VBox(saisiePions);
+        this.saisiePionBox= new HBox(saisiePions);
+
         saisiePionBox.setPadding(new Insets(0,0,0,80));
         //partieBas.setLeft(listeDestination);
-        partieBas.setTop(saisiePionBox);
+        partieBas.setBottom(saisiePionBox);
         partieBas.setCenter(listeDestination);
         //partieBas.getChildren().add(saisiePions);
         // TEST AJOUT POUR NBPIONS
@@ -331,31 +335,44 @@ public class VueDuJeu extends VBox {
 
         this.jeu.joueurCourantProperty().addListener(listenerJoueurAffichage);
         actionARealiser.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (actionARealiser.getText().contains("destination")){
-                saisiePionBox.setVisible(false);
-                listeDestination.setVisible(true);
+            if (actionARealiser.getText().contains("Vous pouvez défausser") && actionARealiser.getText().contains("destination") ){
+                partieBas.getChildren().clear();
+                partieBas.setCenter(listeDestination);
+                partieBas.setRight(partieBasDroite);
             }
-            else {
+            if (actionARealiser.getText().contains("Saisissez un nombre de pion")){
+                partieBas.getChildren().clear();
+                partieBas.setRight(partieBasDroite);
+                partieBas.setCenter(saisiePionBox);
+                bateauxBouton.setVisible(false);
+                wagonsBouton.setVisible(false);
                 saisiePionBox.setVisible(true);
-                listeDestination.setVisible(false);
             }
             if (actionARealiser.getText().contains("Début du tour")){
-                partieBas.getChildren().removeAll(saisiePionBox,listeDestination);
+                partieBas.getChildren().clear();
+                partieBas.setRight(partieBasDroite);
                 partieBas.setCenter(cartesPiochables);
-                cartesPiochables.setPadding(new Insets(0,0,0,60));
-            }
-            if (actionARealiser.getText().contains("révéler une carte")){
-                dosDestination.setVisible(false);
-            }
-            if(actionARealiser.getText().contains("Début du tour")) {
+                partieBas.setBottom(stackpanePion);
+                saisiePionBox.setVisible(false);
+                bateauxBouton.setVisible(true);
+                wagonsBouton.setVisible(true);
                 dosDestination.setVisible(true);
             }
-
+            if (actionARealiser.getText().contains("révéler une carte")){
+                partieBas.getChildren().clear();
+                partieBas.setRight(partieBasDroite);
+                partieBas.setCenter(cartesPiochables);
+                dosDestination.setVisible(false);
+            }
+            if (actionARealiser.getText().contains("Il faut défausser") && actionARealiser.getText().contains("pour prendre la")){
+                partieBas.getChildren().clear();
+                partieBas.setRight(partieBasDroite);
+            }
         });
 
         /* Boutons pions Wagons/Bateaux */
-        Button wagonsBouton = new Button("Prendre des pions Wagons");
-        Button bateauxBouton= new Button("Prendre des pions Bateaux");
+        this.wagonsBouton = new Button("Prendre des pions Wagons");
+        this.bateauxBouton= new Button("Prendre des pions Bateaux");
 
         HBox hbox1 = new HBox(wagonsBouton);
         HBox hbox2 = new HBox(bateauxBouton);
@@ -364,27 +381,32 @@ public class VueDuJeu extends VBox {
         boxPions.setSpacing(20);
 
 
-        TextField t1 = new TextField();
+        /*TextField t1 = new TextField();
         t1.setPromptText("Veuillez saisir le nombre de pions wagons que vous souhaitez ");
         t1.setStyle("-fx-font-weight: bold");
         t1.setVisible(false);
         TextField t2 = new TextField();
         t2.setPromptText("Veuillez saisir le nombre de pions bateaux que vous souhaitez");
         t2.setStyle("-fx-font-weight: bold");
-        t2.setVisible(false);
+        t2.setVisible(false);*/
 
         wagonsBouton.setOnAction(e -> {
             jeu.nouveauxPionsWagonsDemandes(); // TODO : modif Eliott ici
+            saisiePionBox.setVisible(true);
+            wagonsBouton.setVisible(false);
+            bateauxBouton.setVisible(false);
         });
 
         bateauxBouton.setOnAction(e -> {
+            saisiePionBox.setVisible(true);
             jeu.nouveauxPionsBateauxDemandes();
+            bateauxBouton.setVisible(false);
+            wagonsBouton.setVisible(false);
         });
-        StackPane stackPane = new StackPane();
-        stackPane.setPrefSize(100,100);
-        stackPane.getChildren().addAll(boxPions, t1,t2);
-        stackPane.setPadding(new Insets(0,0,0,95));
-        partieBas.setBottom(stackPane);
+        this.stackpanePion= new StackPane();
+        stackpanePion.getChildren().addAll(boxPions);
+        stackpanePion.setPrefSize(1,1);
+        stackpanePion.setPadding(new Insets(0,0,0,80));
 
     }
 
