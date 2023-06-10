@@ -175,4 +175,8 @@ public class VueJoueurCourant extends BorderPane {
     public FlowPane getLesCartesDuJoueur() {
         return lesCartesDuJoueur;
     }
+
+    public Label getNomJoueur() {
+        return nomJoueur;
+    }
 }

@@ -154,6 +154,7 @@ public class VueDuJeu extends VBox {
 
         /* visibles */
         cartesVisibles = new HBox();
+        cartesVisibles.setSpacing(15);
         ListChangeListener<ICarteTransport> cartesVisiblesChangement = change -> {
             while (change.next()){
                 if (change.wasAdded()){
@@ -319,9 +320,6 @@ public class VueDuJeu extends VBox {
         };
 
 
-
-
-
         this.jeu.joueurCourantProperty().addListener(listenerJoueurAffichage);
         actionARealiser.textProperty().addListener((observable, oldValue, newValue) -> {
             if (actionARealiser.getText().contains("destination")){
@@ -337,8 +335,50 @@ public class VueDuJeu extends VBox {
                 partieBas.setCenter(cartesPiochables);
                 cartesPiochables.setPadding(new Insets(0,0,0,60));
             }
+            if (actionARealiser.getText().contains("révéler une carte")){
+                dosDestination.setVisible(false);
+            }
+            if(actionARealiser.getText().contains("Début du tour")) {
+                dosDestination.setVisible(true);
+            }
 
         });
+
+        /* Boutons pions Wagons/Bateaux */
+        Button wagonsBouton = new Button("Prendre des pions Wagons");
+        Button bateauxBouton= new Button("Prendre des pions Bateaux");
+
+        HBox hbox1 = new HBox(wagonsBouton);
+        HBox hbox2 = new HBox(bateauxBouton);
+
+        HBox boxPions = new HBox(hbox1, hbox2);
+        boxPions.setSpacing(20);
+
+
+        TextField t1 = new TextField();
+        t1.setPromptText("Veuillez saisir le nombre de pions wagons que vous souhaitez ");
+        t1.setStyle("-fx-font-weight: bold");
+        t1.setVisible(false);
+        TextField t2 = new TextField();
+        t2.setPromptText("Veuillez saisir le nombre de pions bateaux que vous souhaitez");
+        t2.setStyle("-fx-font-weight: bold");
+        t2.setVisible(false);
+
+        wagonsBouton.setOnAction(e -> {
+            t1.setVisible(true);
+            StackPane.clearConstraints(hbox1);
+        });
+
+        bateauxBouton.setOnAction(e -> {
+            t2.setVisible(true);
+            StackPane.clearConstraints(hbox2);
+        });
+        StackPane stackPane = new StackPane();
+        stackPane.setPrefSize(100,100);
+        stackPane.getChildren().addAll(boxPions, t1,t2);
+        stackPane.setPadding(new Insets(0,0,0,95));
+        partieBas.setBottom(stackPane);
+
     }
 
     public IJeu getJeu() {
