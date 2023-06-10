@@ -149,6 +149,7 @@ public class VueDuJeu extends VBox {
 
 
 
+        /* SAISIE PIONS*/
         TextField saisieNbPions = new TextField();
         saisieNbPions.setMaxWidth(50);
         Button valider = new Button("Valider");
@@ -373,13 +374,11 @@ public class VueDuJeu extends VBox {
         t2.setVisible(false);
 
         wagonsBouton.setOnAction(e -> {
-            t1.setVisible(true);
-            StackPane.clearConstraints(hbox1);
+            jeu.nouveauxPionsWagonsDemandes(); // TODO : modif Eliott ici
         });
 
         bateauxBouton.setOnAction(e -> {
-            t2.setVisible(true);
-            StackPane.clearConstraints(hbox2);
+            jeu.nouveauxPionsBateauxDemandes();
         });
         StackPane stackPane = new StackPane();
         stackPane.setPrefSize(100,100);
