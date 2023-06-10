@@ -130,9 +130,11 @@ public class VueDuJeu extends VBox {
         HBox saisiePions = new HBox(saisieNbPions, valider);
         /* Affichage en bas */
         partieBas = new BorderPane();
-        VBox test = new VBox(saisiePions, listeDestination);
+        VBox test = new VBox(saisiePions);
+        test.setPadding(new Insets(0,0,0,80));
         //partieBas.setLeft(listeDestination);
-        partieBas.setLeft(test);
+        partieBas.setTop(test);
+        partieBas.setCenter(listeDestination);
         //partieBas.getChildren().add(saisiePions);
         // TEST AJOUT POUR NBPIONS
 
