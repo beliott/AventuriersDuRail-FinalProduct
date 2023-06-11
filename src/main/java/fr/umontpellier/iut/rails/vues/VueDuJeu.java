@@ -4,6 +4,8 @@ import fr.umontpellier.iut.rails.ICarteTransport;
 import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
+import fr.umontpellier.iut.rails.mecanique.Joueur;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
@@ -149,7 +151,7 @@ public class VueDuJeu extends VBox {
         container.setAlignment(Pos.CENTER);
         container.setSpacing(5);
         partieBasDroite.setSpacing(25);
-        partieBasDroite.setPadding(new Insets(5,20,10,20));
+        partieBasDroite.setPadding(new Insets(10,20,10,20));
         partieBasDroite.getChildren().add(container);
         partieBasDroite.getChildren().add(passer);
         passer.prefWidthProperty().bind(partieBasDroite.prefWidthProperty());
@@ -247,7 +249,13 @@ public class VueDuJeu extends VBox {
         jCourant.prefWidthProperty().bind(getScene().widthProperty().subtract(plateau.prefWidthProperty()));
         jCourant.prefHeightProperty().bindBidirectional(plateau.prefHeightProperty());
         jCourant.maxHeightProperty().bind(plateau.prefHeightProperty());
-        cartesPiochables.maxWidthProperty().bind(partieBas.widthProperty().subtract(partieBasDroite.widthProperty()));
+
+        jeu.finDePartieProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (t1){
+                partieBas.getChildren().clear();
+                partieBas.setCenter(new VueResultats());
+            }
+        });
 
 
 
@@ -335,10 +343,6 @@ public class VueDuJeu extends VBox {
         };
 
 
-
-
-
-
         this.jeu.joueurCourantProperty().addListener(listenerJoueurAffichage);
         actionARealiser.textProperty().addListener((observable, oldValue, newValue) -> {
             if (actionARealiser.getText().contains("Vous pouvez défausser") && actionARealiser.getText().contains("destination") ){
@@ -359,13 +363,7 @@ public class VueDuJeu extends VBox {
                 partieBas.getChildren().clear();
                 partieBas.setRight(partieBasDroite);
                 partieBas.setCenter(cartesPiochables);
-                HBox h = new HBox();
-                h.setPrefSize(1,1);
-                h.setAlignment(Pos.TOP_CENTER);
-                h.setVisible(true);
-                h.setSpacing(15);
-                h.getChildren().addAll(wagonsBouton,bateauxBouton);
-                partieBas.setTop(h);
+                partieBas.setBottom(stackpanePion);
                 saisiePionBox.setVisible(false);
                 bateauxBouton.setVisible(true);
                 wagonsBouton.setVisible(true);
@@ -427,43 +425,7 @@ public class VueDuJeu extends VBox {
         return jeu;
     }
 
-    private void affichageFinDePartie(){
-        // Création des labels
-        Label titre = new Label("La partie est terminée !");
-        titre.setFont(Font.font("Arial", 30));
-        titre.setTextFill(Color.WHITE);
-
-        Label winnerLabel = new Label("Le grand gagnant est : leNomDuGagnant");
-        winnerLabel.setFont(Font.font("Arial", 20));
-        winnerLabel.setTextFill(Color.WHITE);
-
-        Label rankingLabel = new Label("Classement des joueurs :");
-        rankingLabel.setFont(Font.font("Arial", 18));
-        rankingLabel.setTextFill(Color.WHITE);
-
-        Label player1Label = new Label("Joueur 1 : 100 points");
-        Label player2Label = new Label("Joueur 2 : 80 points");
-        Label player3Label = new Label("Joueur 3 : 120 points");
-
-        // classement vbox
-        VBox rankingVBox = new VBox(rankingLabel, player1Label, player2Label, player3Label);
-        rankingVBox.setAlignment(Pos.CENTER_LEFT);
-        rankingVBox.setSpacing(10);
-
-        // container principale
-        HBox hboxMain = new HBox(titre);
-        hboxMain.setAlignment(Pos.CENTER);
-
-        // Création de la VBox principale
-        VBox finJeu = new VBox(hboxMain, winnerLabel, rankingVBox);
-
-        finJeu.setSpacing(20);
-        finJeu.setPadding(new Insets(20));
-        finJeu.getStyleClass().add("tooltip");
-        partieBas.setCenter(finJeu);
-    }
-
-    public void affichageDebutDePartie(){
+    public void debutDePartie(){
         // Création des labels
         Label titre = new Label("Bienvenue dans Les Aventuriers du Rail !");
         titre.setFont(Font.font("Arial", 30));
