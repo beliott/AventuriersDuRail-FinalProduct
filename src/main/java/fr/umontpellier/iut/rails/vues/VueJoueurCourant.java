@@ -159,12 +159,6 @@ public class VueJoueurCourant extends BorderPane {
             FlowPane jcourantDestination = new FlowPane(); jcourantDestination.setHgap(5); jcourantDestination.setVgap(5); jcourantDestination.setPadding(new Insets(5, 5 ,5 ,5));
             for (IDestination d : ((VueDuJeu) getScene().getRoot()).getJeu().joueurCourantProperty().get().getDestinations() ) {
                 HBox b = new HBox();
-                Image bgroundo = new Image("destination.jpg");
-                BackgroundImage background = new BackgroundImage(bgroundo,
-                        BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
-                        BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
-                Background backgroundImage = new Background(background);
-
                 BorderPane v = new BorderPane();
                 BorderPane h1 = new BorderPane();
                 BorderPane h2 = new BorderPane();
