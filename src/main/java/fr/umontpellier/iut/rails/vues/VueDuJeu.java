@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -257,12 +258,7 @@ public class VueDuJeu extends VBox {
         jCourant.prefHeightProperty().bindBidirectional(plateau.prefHeightProperty());
         jCourant.maxHeightProperty().bind(plateau.prefHeightProperty());
 
-        jeu.finDePartieProperty().addListener((observableValue, aBoolean, t1) -> {
-            if (t1){
-                partieBas.getChildren().clear();
-                partieBas.setCenter(new VueResultats(jeu));
-            }
-        });
+
 
 
 

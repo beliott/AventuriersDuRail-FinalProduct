@@ -4,10 +4,12 @@ import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.RailsIHM;
 import fr.umontpellier.iut.rails.mecanique.Joueur;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -15,6 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +32,8 @@ public class VueResultats extends Pane {
     private IJeu jeu;
     private Label winnerLabel;
     private Map<Joueur, Integer> scores;
+
+
 
     public VueResultats(IJeu jeu) {
         scores = new HashMap<>();
@@ -63,19 +68,29 @@ public class VueResultats extends Pane {
         HBox hboxMain = new HBox(titre);
         hboxMain.setAlignment(Pos.CENTER);
 
+        // Bouton nouvelle partie
+        Button b = new Button("Demarrer une nouvelle partie");
+        b.setOnMouseClicked(mouseEvent -> {
+            RailsIHM m = new RailsIHM();
+            m.start(m.getPrimaryStage());
+            //((VueDuJeu) getScene().getRoot()).
+        });
+
         // Création de la VBox principale
-        VBox finJeu = new VBox(hboxMain, winnerLabel, rankingVBox);
+        VBox finJeu = new VBox(hboxMain, winnerLabel, rankingVBox,b);
 
         finJeu.setSpacing(20);
         finJeu.setPadding(new Insets(20));
         finJeu.getStyleClass().add("tooltip");
+
+
         this.getChildren().add(finJeu);
         creerBindings();
     }
 
     public void creerBindings(){
         String nomGagnant = "";
-        Integer scoreGagnant = 0;
+        Integer scoreGagnant = Integer.MIN_VALUE;
         for (Joueur j : scores.keySet()) {
             if (scores.get(j) > scoreGagnant){
                 scoreGagnant = scores.get(j);

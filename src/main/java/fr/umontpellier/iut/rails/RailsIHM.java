@@ -4,12 +4,16 @@ import fr.umontpellier.iut.rails.mecanique.Jeu;
 import fr.umontpellier.iut.rails.vues.DonneesGraphiques;
 import fr.umontpellier.iut.rails.vues.VueChoixJoueurs;
 import fr.umontpellier.iut.rails.vues.VueDuJeu;
+import fr.umontpellier.iut.rails.vues.VueResultats;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -21,6 +25,11 @@ public class RailsIHM extends Application {
 
     private VueChoixJoueurs vueChoixJoueurs;
     private Stage primaryStage;
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
     private Jeu jeu;
 
     private final boolean avecVueChoixJoueurs = true;
@@ -74,6 +83,17 @@ public class RailsIHM extends Application {
         primaryStage.setOnCloseRequest(event -> {
             this.arreterJeu();
             event.consume();
+        });
+        jeu.finDePartieProperty().addListener((observableValue, aBoolean, t1) -> {
+            if (t1){
+                BorderPane o = new BorderPane();
+                VueResultats fin = new VueResultats(jeu);
+                Scene s = new Scene(fin);
+                primaryStage.getProperties().clear();
+
+                primaryStage.setResizable(false);
+                primaryStage.setScene(s);
+            }
         });
         primaryStage.show();
     }
