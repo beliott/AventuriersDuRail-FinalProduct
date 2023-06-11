@@ -64,6 +64,13 @@ public class RailsIHM extends Application {
         primaryStage.centerOnScreen();
         primaryStage.setMaxWidth(Screen.getPrimary().getBounds().getWidth());
         primaryStage.setMaxHeight(Screen.getPrimary().getBounds().getHeight());
+
+        for (IJoueur joueur : jeu.getJoueurs()) {
+            joueur.nbPionsBateauxProperty().set(2);
+            joueur.nbPionsWagonsProperty().set(2);
+
+        }
+
         primaryStage.setOnCloseRequest(event -> {
             this.arreterJeu();
             event.consume();

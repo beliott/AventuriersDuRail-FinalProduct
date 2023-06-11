@@ -25,10 +25,11 @@ import java.util.Map;
  */
 public class VueResultats extends Pane {
 
+    private IJeu jeu;
     private Label winnerLabel;
     private Map<Joueur, Integer> scores;
 
-    public VueResultats() {
+    public VueResultats(IJeu jeu) {
         scores = new HashMap<>();
         // Création des labels
         Label titre = new Label("La partie est terminée !");
@@ -44,7 +45,7 @@ public class VueResultats extends Pane {
         rankingLabel.setTextFill(Color.WHITE);
 
         VBox classement = new VBox();
-        IJeu jeu = ((VueDuJeu) getScene().getRoot()).getJeu();
+        this.jeu = jeu;
         for (IJoueur j : jeu.getJoueurs()){
             Joueur joueur = (Joueur) j;
             Integer scoreJoueur = ((Joueur) j).calculerScoreFinal();
@@ -68,6 +69,7 @@ public class VueResultats extends Pane {
         finJeu.setPadding(new Insets(20));
         finJeu.getStyleClass().add("tooltip");
         this.getChildren().add(finJeu);
+        creerBindings();
     }
 
     public void creerBindings(){

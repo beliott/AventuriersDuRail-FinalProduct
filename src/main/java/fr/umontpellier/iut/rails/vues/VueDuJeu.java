@@ -25,6 +25,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -135,7 +136,6 @@ public class VueDuJeu extends VBox {
             v.setStyle("-fx-background-color: " + v.traduceColor(j.getCouleur()));
         }
 
-        /* Test regler ratio pions */
 
         /* piocher cartes */
         this.cartesPiochables = new HBox(dosWagon, dosBateau, dosDestination);
@@ -260,7 +260,7 @@ public class VueDuJeu extends VBox {
         jeu.finDePartieProperty().addListener((observableValue, aBoolean, t1) -> {
             if (t1){
                 partieBas.getChildren().clear();
-                partieBas.setCenter(new VueResultats());
+                partieBas.setCenter(new VueResultats(jeu));
             }
         });
 
@@ -441,8 +441,6 @@ public class VueDuJeu extends VBox {
         stackpanePion.getChildren().addAll(boxPions);
         stackpanePion.setPrefSize(60,25);
         stackpanePion.setPadding(new Insets(5,0,10,90));
-
-
 
     }
 
