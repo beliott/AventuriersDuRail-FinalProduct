@@ -144,7 +144,7 @@ public class VueDuJeu extends VBox {
         container.setAlignment(Pos.CENTER);
         container.setSpacing(5);
         partieBasDroite.setSpacing(25);
-        partieBasDroite.setPadding(new Insets(10,20,10,20));
+        partieBasDroite.setPadding(new Insets(5,20,10,20));
         partieBasDroite.getChildren().add(container);
         partieBasDroite.getChildren().add(passer);
         passer.prefWidthProperty().bind(partieBasDroite.prefWidthProperty());
@@ -241,6 +241,7 @@ public class VueDuJeu extends VBox {
         jCourant.prefWidthProperty().bind(getScene().widthProperty().subtract(plateau.prefWidthProperty()));
         jCourant.prefHeightProperty().bindBidirectional(plateau.prefHeightProperty());
         jCourant.maxHeightProperty().bind(plateau.prefHeightProperty());
+        cartesPiochables.maxWidthProperty().bind(partieBas.widthProperty().subtract(partieBasDroite.widthProperty()));
 
 
 
@@ -333,6 +334,10 @@ public class VueDuJeu extends VBox {
         };
 
 
+
+
+
+
         this.jeu.joueurCourantProperty().addListener(listenerJoueurAffichage);
         actionARealiser.textProperty().addListener((observable, oldValue, newValue) -> {
             if (actionARealiser.getText().contains("Vous pouvez défausser") && actionARealiser.getText().contains("destination") ){
@@ -352,7 +357,13 @@ public class VueDuJeu extends VBox {
                 partieBas.getChildren().clear();
                 partieBas.setRight(partieBasDroite);
                 partieBas.setCenter(cartesPiochables);
-                partieBas.setBottom(stackpanePion);
+                HBox h = new HBox();
+                h.setPrefSize(1,1);
+                h.setAlignment(Pos.TOP_CENTER);
+                h.setVisible(true);
+                h.setSpacing(15);
+                h.getChildren().addAll(wagonsBouton,bateauxBouton);
+                partieBas.setTop(h);
                 saisiePionBox.setVisible(false);
                 bateauxBouton.setVisible(true);
                 wagonsBouton.setVisible(true);
@@ -405,8 +416,8 @@ public class VueDuJeu extends VBox {
         });
         this.stackpanePion= new StackPane();
         stackpanePion.getChildren().addAll(boxPions);
-        stackpanePion.setPrefSize(1,1);
-        stackpanePion.setPadding(new Insets(0,0,0,80));
+        stackpanePion.setPrefSize(60,25);
+        stackpanePion.setPadding(new Insets(0,0,10,80));
 
     }
 
@@ -450,7 +461,7 @@ public class VueDuJeu extends VBox {
         partieBas.setCenter(finJeu);
     }
 
-    public void debutDePartie(){
+    public void affichageDebutDePartie(){
         // Création des labels
         Label titre = new Label("Bienvenue dans Les Aventuriers du Rail !");
         titre.setFont(Font.font("Arial", 30));

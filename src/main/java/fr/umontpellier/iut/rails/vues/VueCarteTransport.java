@@ -18,11 +18,10 @@ public class VueCarteTransport extends Pane {
         this.carteTransport = carteTransport;
 
         String lienCarte = getlinkImage(carteTransport);
-
         imgCarte = new ImageView(lienCarte);
         imgCarte.setId(carteTransport.getNom());
         imgCarte.setPreserveRatio(true); // on preserve ses proportions
-        imgCarte.setFitWidth(100);
+        imgCarte.setFitWidth(120);
 
         this.getChildren().add(imgCarte);
 
@@ -51,4 +50,7 @@ public class VueCarteTransport extends Pane {
         return rep;
     }
 
+    public ImageView getImgCarte() {
+        return imgCarte;
+    }
 }
