@@ -366,7 +366,7 @@ public class VueDuJeu extends VBox {
 
 
             }
-            if (actionARealiser.getText().contains("Début du tour")){
+            if (actionARealiser.getText().contains("Début du tour")  || actionARealiser.getText().contains("Avant-dernier tour de") || actionARealiser.getText().contains("Dernier tour de")){
                 partieBas.getChildren().clear();
                 partieBas.setRight(partieBasDroite);
                 partieBas.setCenter(cartesPiochables);
