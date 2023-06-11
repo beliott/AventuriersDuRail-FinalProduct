@@ -124,6 +124,9 @@ public class VueChoixJoueurs extends Stage {
                     indice++;
                     if (indice != nombreDeJoueurs + 1)
                         choixAFaire.textProperty().setValue("Veuillez saisir le nom du joueur " +"j"+ indice);
+                    else{
+                        choixAFaire.textProperty().setValue("Vous pouvez commencer la partie !");
+                    }
                 }
 
             }
