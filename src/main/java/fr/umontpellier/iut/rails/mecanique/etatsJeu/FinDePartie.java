@@ -20,7 +20,7 @@ public class FinDePartie extends EtatJeu {
 
     public String getInfosPhase() {
         if (nbToursAvantFin < jeu.getJoueurs().size())
-            return "Dernier tour";
-        return "Avant-dernier tour";
+            return "Dernier tour de ";
+        return "Avant-dernier tour de ";
     }
 }
