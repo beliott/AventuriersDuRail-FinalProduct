@@ -74,25 +74,13 @@ public class RailsIHM extends Application {
         primaryStage.setMaxWidth(Screen.getPrimary().getBounds().getWidth());
         primaryStage.setMaxHeight(Screen.getPrimary().getBounds().getHeight());
 
-        for (IJoueur joueur : jeu.getJoueurs()) {
-            joueur.nbPionsBateauxProperty().set(2);
-            joueur.nbPionsWagonsProperty().set(2);
-
-        }
-
         primaryStage.setOnCloseRequest(event -> {
             this.arreterJeu();
             event.consume();
         });
         jeu.finDePartieProperty().addListener((observableValue, aBoolean, t1) -> {
             if (t1){
-                BorderPane o = new BorderPane();
-                VueResultats fin = new VueResultats(jeu);
-                Scene s = new Scene(fin);
-                primaryStage.getProperties().clear();
-
-                primaryStage.setResizable(false);
-                primaryStage.setScene(s);
+                finDePartie();
             }
         });
         primaryStage.show();
@@ -119,6 +107,20 @@ public class RailsIHM extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+    public void finDePartie(){
+        BorderPane o = new BorderPane();
+        VueResultats fin = new VueResultats(jeu,this);
+        Stage s = new Stage();
+        s.setScene(new Scene(fin));
+        s.setTitle("Resultat de la partie");
+        primaryStage.hide();
+        s.show();
+    }
+    public void hideResult(){
+        if (!(primaryStage == null)){
+            primaryStage.hide();
+        }
     }
 
 }

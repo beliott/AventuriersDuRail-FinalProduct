@@ -33,9 +33,16 @@ public class VueResultats extends Pane {
     private Label winnerLabel;
     private Map<Joueur, Integer> scores;
 
+    private RailsIHM p;
 
+    private Button relancer;
 
-    public VueResultats(IJeu jeu) {
+    public Button getRelancer() {
+        return relancer;
+    }
+
+    public VueResultats(IJeu jeu, RailsIHM b) {
+        p = b;
         scores = new HashMap<>();
         // Création des labels
         Label titre = new Label("La partie est terminée !");
@@ -69,15 +76,17 @@ public class VueResultats extends Pane {
         hboxMain.setAlignment(Pos.CENTER);
 
         // Bouton nouvelle partie
-        Button b = new Button("Demarrer une nouvelle partie");
-        b.setOnMouseClicked(mouseEvent -> {
-            RailsIHM m = new RailsIHM();
-            m.start(m.getPrimaryStage());
-            //((VueDuJeu) getScene().getRoot()).
+        relancer = new Button("Demarrer une nouvelle partie");
+
+        relancer.setOnAction(e ->{
+            p.hideResult();
+            p.demarrerPartie();
         });
 
+
+
         // Création de la VBox principale
-        VBox finJeu = new VBox(hboxMain, winnerLabel, rankingVBox,b);
+        VBox finJeu = new VBox(hboxMain, winnerLabel, rankingVBox,relancer);
 
         finJeu.setSpacing(20);
         finJeu.setPadding(new Insets(20));
@@ -101,5 +110,6 @@ public class VueResultats extends Pane {
         }
         winnerLabel.textProperty().bind(Bindings.concat(winnerLabel.getText(), nomGagnant));
     }
+
 
 }
