@@ -118,7 +118,7 @@ public class VueChoixJoueurs extends Stage {
                     nomDesJoueurs.add(champSaisie.textProperty().getValue());
                 }
                 champSaisie.clear();
-                System.out.println(nomDesJoueurs);
+
 
                 if (indice != nombreDeJoueurs + 1){
                     indice++;
