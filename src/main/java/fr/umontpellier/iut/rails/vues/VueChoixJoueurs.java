@@ -167,14 +167,14 @@ public class VueChoixJoueurs extends Stage {
     public void setNomsDesJoueursDefinisListener(ListChangeListener<String> quandLesNomsDesJoueursSontDefinis) {
         nomsJoueursProperty().addListener(quandLesNomsDesJoueursSontDefinis);
 
-    } // TODO : a modifier
+    }
 
     /**
      * Définit l'action à exécuter lorsque le nombre de participants change
      */
     protected void setChangementDuNombreDeJoueursListener(ChangeListener<Integer> quandLeNombreDeJoueursChange) {
 
-    } // TODO : a modifier
+    }
 
     /**
      * Vérifie que tous les noms des participants sont renseignés
@@ -211,7 +211,7 @@ public class VueChoixJoueurs extends Stage {
      */
     protected String getJoueurParNumero(int playerNumber) {
         return nomsJoueurs.get(playerNumber - 1);
-    } //TODO : verif si indice marche bien
+    }
 
     private boolean nomExisteDeja(String s) {
         for (String a: nomDesJoueurs) {

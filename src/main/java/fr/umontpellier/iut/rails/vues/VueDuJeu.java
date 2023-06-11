@@ -144,7 +144,7 @@ public class VueDuJeu extends VBox {
         dosWagon.setPreserveRatio(true); dosWagon.setFitHeight(100); dosWagon.setOnMouseClicked(mouseEventPiocherCarteWagon);
         dosBateau.setPreserveRatio(true); dosBateau.setFitHeight(100); dosBateau.setOnMouseClicked(mouseEventPiocherCarteBateau);
         dosDestination.setPreserveRatio(true); dosDestination.setFitWidth(100); dosDestination.setOnMouseClicked(mouseEventPiocheDestinations);
-        // TODO : ajouter ca et tester !
+
 
 
         /* Affichage en bas a droite */
