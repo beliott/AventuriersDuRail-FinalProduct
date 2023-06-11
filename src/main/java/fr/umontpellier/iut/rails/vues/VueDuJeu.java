@@ -67,6 +67,11 @@ public class VueDuJeu extends VBox {
     private ImageView dosWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
     private ImageView dosBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
     private ImageView dosDestination = new ImageView("images/cartesWagons/destinations.png");
+    Image bgroundo = new Image("destination.jpg");
+    BackgroundImage background = new BackgroundImage(bgroundo,
+            BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
+            BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+    Background backgroundImage = new Background(background);
     EventHandler<MouseEvent> mouseEventPiocherCarteWagon = mouseEvent -> {
         getJeu().uneCarteWagonAEtePiochee();
     };
@@ -213,6 +218,7 @@ public class VueDuJeu extends VBox {
 
         setBackGround();
         this.getChildren().addAll( actionARealiser, plateauEtJoueur,partieBas);
+
     }
 
     public void setBackGround(){
@@ -262,11 +268,6 @@ public class VueDuJeu extends VBox {
                 if (change.wasAdded()) {
                     for (IDestination iDestination : change.getAddedSubList()) {
                         Button b = new Button();
-                    Image bground = new Image("destination.jpg");
-                    BackgroundImage background = new BackgroundImage(bground,
-                            BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
-                            BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
-                    Background backgroundImage = new Background(background);
                     b.setBackground(backgroundImage);
                         BorderPane v = new BorderPane();
                         BorderPane h1 = new BorderPane();
@@ -352,6 +353,7 @@ public class VueDuJeu extends VBox {
                 bateauxBouton.setVisible(false);
                 wagonsBouton.setVisible(false);
                 saisiePionBox.setVisible(true);
+
             }
             if (actionARealiser.getText().contains("Début du tour")){
                 partieBas.getChildren().clear();

@@ -44,6 +44,11 @@ public class VueJoueurCourant extends BorderPane {
 
     private VBox centre;
     private List<VueCarteTransport> lesCartesTransport;
+    Image bgroundo = new Image("destinationcopy.jpg");
+    BackgroundImage background = new BackgroundImage(bgroundo,
+            BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
+            BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+    Background backgroundImage = new Background(background);
 
 
     public VueJoueurCourant(IJoueur joueurCourant) {
@@ -51,7 +56,7 @@ public class VueJoueurCourant extends BorderPane {
         this.scoreJoueur.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
         this.dest = new Label("Destinations");
         this.nomJoueur = new Label();
-        this.nomJoueur.setStyle("-fx-font-size: 40px; -fx-font-family:IMFeENsc28P");
+        this.nomJoueur.setStyle("-fx-font-size: 40px;");
         this.lesCartesDuJoueur = new FlowPane(); lesCartesDuJoueur.setHgap(5); lesCartesDuJoueur.setVgap(5); lesCartesDuJoueur.setPadding(new Insets(5, 5 ,5 ,5));
         this.centre = new VBox(this.nomJoueur,this.lesCartesDuJoueur);
         this.setBorder(new Border(new BorderStroke(BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
@@ -114,7 +119,6 @@ public class VueJoueurCourant extends BorderPane {
                 // TEST
                 VueCarteTransport v = new VueCarteTransport(c);
                 this.lesCartesTransport.add(v);
-                v.getImgCarte().setFitWidth(120);
                 v.setOnMouseClicked(mouseEvent -> {
                     leJeu.uneCarteDuJoueurEstJouee(v.getCarteTransport());
                 });
@@ -153,7 +157,7 @@ public class VueJoueurCourant extends BorderPane {
             nbPorts.textProperty().bind(newJ.nbPionsPortProperty().asString());
 
             FlowPane jcourantDestination = new FlowPane(); jcourantDestination.setHgap(5); jcourantDestination.setVgap(5); jcourantDestination.setPadding(new Insets(5, 5 ,5 ,5));
-            for (IDestination d : ((VueDuJeu) getScene().getRoot()).getJeu().joueurCourantProperty().get().getDestinations() ){
+            for (IDestination d : ((VueDuJeu) getScene().getRoot()).getJeu().joueurCourantProperty().get().getDestinations() ) {
                 HBox b = new HBox();
                 Image bgroundo = new Image("destination.jpg");
                 BackgroundImage background = new BackgroundImage(bgroundo,
@@ -184,11 +188,12 @@ public class VueJoueurCourant extends BorderPane {
                     return "-fx-font-size: " + fontSize + "px";
                 }, jcourantDestination.widthProperty()));*/
                 b.getChildren().add(v);
-                b.setPrefSize(90,25);
-                v.setPrefSize(90,25);
+                b.setPrefSize(90, 25);
+                v.setPrefSize(90, 25);
                 v.setBackground(backgroundImage);
                 jcourantDestination.getChildren().add(b);
             }
+
             this.getDest().hoverProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
