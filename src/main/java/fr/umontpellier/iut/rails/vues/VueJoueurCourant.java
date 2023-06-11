@@ -5,6 +5,7 @@ import fr.umontpellier.iut.rails.IDestination;
 import fr.umontpellier.iut.rails.IJeu;
 import fr.umontpellier.iut.rails.IJoueur;
 import fr.umontpellier.iut.rails.mecanique.data.Couleur;
+import javafx.animation.FadeTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.When;
@@ -16,12 +17,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.css.Style;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +44,25 @@ public class VueJoueurCourant extends BorderPane {
     private Label nomJoueur;
     private FlowPane lesCartesDuJoueur;
     // bottom
-    private Label dest, nbPionsWagons, nbPionsBateaux, nbPorts;
+    private Label nbPionsWagons, nbPionsBateaux, nbPorts;
+    private Button dest;
 
     private VBox centre;
     private List<VueCarteTransport> lesCartesTransport;
+
+    public List<VueCarteTransport> getUtile() {
+        return utile;
+    }
+
+    private List<VueCarteTransport> utile;
+    private DropShadow effet = new DropShadow();
+
+
+    public List<VueCarteTransport> getLesCartesTransport() {
+        return lesCartesTransport;
+    }
+
+
     Image bgroundo = new Image("destinationcopy.jpg");
     BackgroundImage background = new BackgroundImage(bgroundo,
             BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT,
@@ -51,10 +70,11 @@ public class VueJoueurCourant extends BorderPane {
     Background backgroundImage = new Background(background);
 
 
+
     public VueJoueurCourant(IJoueur joueurCourant) {
         this.scoreJoueur = new Label("Score :");
         this.scoreJoueur.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
-        this.dest = new Label("Destinations");
+        this.dest = new Button("Destinations");
         this.nomJoueur = new Label();
         this.nomJoueur.setStyle("-fx-font-size: 40px;");
         this.lesCartesDuJoueur = new FlowPane(); lesCartesDuJoueur.setHgap(5); lesCartesDuJoueur.setVgap(5); lesCartesDuJoueur.setPadding(new Insets(5, 5 ,5 ,5));
@@ -81,7 +101,14 @@ public class VueJoueurCourant extends BorderPane {
         this.setCenter(centre);
         this.setBottom(bas);
         this.setStyle("-fx-background-color: #FFC9A3");
+        dest.setStyle("-fx-background-color: #FFC9A3");
+        dest.setBorder(new Border(new BorderStroke(BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1))));
         this.lesCartesTransport = new ArrayList<>();
+        this.utile = new ArrayList<>();
+
+        effet.setColor(Color.YELLOW);
+        effet.setRadius(10);
+        effet.setSpread(0.7);
     }
 
     public String traduceColor(IJoueur.CouleurJoueur c){
@@ -115,11 +142,13 @@ public class VueJoueurCourant extends BorderPane {
             nomJoueur.setText(newJ.getNom());
             // Les cartes transport
             lesCartesDuJoueur.getChildren().clear();
+
             for (ICarteTransport c: newJ.getCartesTransport()) {
                 // TEST
                 VueCarteTransport v = new VueCarteTransport(c);
                 this.lesCartesTransport.add(v);
                 v.setOnMouseClicked(mouseEvent -> {
+                    utile.add(v);
                     leJeu.uneCarteDuJoueurEstJouee(v.getCarteTransport());
                 });
 
@@ -130,7 +159,7 @@ public class VueJoueurCourant extends BorderPane {
             if (!lesCartesTransport.isEmpty()) {
                 for (VueCarteTransport v : this.lesCartesTransport) {
                     v.getImgCarte().fitWidthProperty().bind(
-                            this.widthProperty().multiply(0.218)
+                            this.widthProperty().multiply(0.180)
                     );
                 }
             }
@@ -170,7 +199,7 @@ public class VueJoueurCourant extends BorderPane {
                 h1.setLeft(ville1);
                 h1.setRight(valeur);
                 h2.setRight(ville2);
-                valeur.setStyle("-fx-font-weight: bold; -fx-font-size: 19px");
+                valeur.setStyle("-fx-font-weight: bold; -fx-font-size: 19px;-fx-text-fill: RED");
                 b.setStyle("-fx-font-weight: bold; -fx-font-size: 15px");
                 if (d.getVilles().size() <= 2) {
                     valeur.setText(String.valueOf(d.getValeur()));
@@ -182,13 +211,14 @@ public class VueJoueurCourant extends BorderPane {
                     return "-fx-font-size: " + fontSize + "px";
                 }, jcourantDestination.widthProperty()));*/
                 b.getChildren().add(v);
-                b.setPrefSize(90, 25);
-                v.setPrefSize(90, 25);
+                b.setPrefSize(100, 25);
+                v.setPrefSize(100, 25);
                 v.setBackground(backgroundImage);
+                jcourantDestination.prefWidthProperty().bind(lesCartesDuJoueur.widthProperty());
                 jcourantDestination.getChildren().add(b);
             }
 
-            this.getDest().hoverProperty().addListener(new ChangeListener<Boolean>() {
+            /*this.dest.hoverProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                     if (newValue) {
@@ -199,12 +229,20 @@ public class VueJoueurCourant extends BorderPane {
                         centre.getChildren().addAll(nomJoueur,lesCartesDuJoueur);
                     }
                 }
+            });*/
+            this.dest.setOnAction(event -> {
+                if (!centre.getChildren().contains(jcourantDestination)) {
+                    centre.getChildren().clear();
+                    centre.getChildren().addAll(nomJoueur, jcourantDestination);
+                    this.dest.setEffect(effet);
+                } else {
+                    centre.getChildren().clear();
+                    centre.getChildren().addAll(nomJoueur, lesCartesDuJoueur);
+                    this.dest.effectProperty().set(null);
+                }
             });
         };
         leJeu.joueurCourantProperty().addListener(joueurCourantListener); // cf. la fin du readme
-
-
-
     }
 
     private void largeurImage(){
@@ -215,9 +253,6 @@ public class VueJoueurCourant extends BorderPane {
         }
     }
 
-    public Label getDest() {
-        return dest;
-    }
 
     public FlowPane getLesCartesDuJoueur() {
         return lesCartesDuJoueur;

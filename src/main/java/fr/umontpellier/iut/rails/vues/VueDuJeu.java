@@ -53,6 +53,11 @@ public class VueDuJeu extends VBox {
     private HBox saisiePionBox;
     private Label actionARealiser;
     private HBox cartesPiochables;
+
+    public Label getActionARealiser() {
+        return actionARealiser;
+    }
+
     private int nombreDeJoueurs;
     private int indice;
 
@@ -64,7 +69,7 @@ public class VueDuJeu extends VBox {
     private Button bateauxBouton;
     private VBox partieBasDroite;
 
-    private HBox cartesVisibles;
+    private FlowPane cartesVisibles;
     private StackPane stackpanePion;
     private ImageView dosWagon = new ImageView("images/cartesWagons/dos-WAGON.png");
     private ImageView dosBateau = new ImageView("images/cartesWagons/dos-BATEAU.png");
@@ -95,7 +100,7 @@ public class VueDuJeu extends VBox {
         this.actionARealiser = new Label();
         actionARealiser.textProperty().bind(jeu.instructionProperty());
         actionARealiser.setStyle("-fx-text-fill: white;-fx-font-family: Chilanka; -fx-font-size: 25px;-fx-font-weight: bold; ");
-        actionARealiser.setPadding(new Insets(10,0,0,60));
+        actionARealiser.setPadding(new Insets(10,0,0,80));
         //3 Bouton passer
         Button passer = new Button("Passer");
         passer.setStyle("-fx-background-color: #0078B8; -fx-text-fill: white; -fx-font-size: 14px;-fx-font-weight: bold;");
@@ -106,6 +111,7 @@ public class VueDuJeu extends VBox {
         passer.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> passer.setEffect(dropShadow));
         passer.addEventHandler(MouseEvent.MOUSE_EXITED, event -> passer.setEffect(null));
 
+
         listeDestination = new HBox();
         listeDestination.setAlignment(Pos.CENTER);
         listeDestination.prefWidthProperty().bind(plateau.prefWidthProperty());
@@ -114,11 +120,11 @@ public class VueDuJeu extends VBox {
         HBox h1 = new HBox(plateau);
         HBox h2 = new HBox(jCourant);
         this.plateauEtJoueur = new HBox(h1, h2);
-        h1.setAlignment(Pos.CENTER_LEFT);
-        h2.setAlignment(Pos.CENTER_RIGHT);
+        h1.setAlignment(Pos.CENTER);
+        h2.setAlignment(Pos.CENTER);
         //plateauEtJoueur.setStyle("-fx-background-color: tan");
         plateauEtJoueur.setPadding(new Insets(20, 20        , 0, 0));
-        plateauEtJoueur.setSpacing(20);
+        plateauEtJoueur.setSpacing(5);
 
         /*Vue autre Joueur*/
 
@@ -171,14 +177,15 @@ public class VueDuJeu extends VBox {
         });
 
         /* visibles */
-        cartesVisibles = new HBox();
-        cartesVisibles.setSpacing(15);
+        cartesVisibles = new FlowPane();
+        cartesVisibles.setHgap(20);
+        cartesVisibles.setVgap(10);
         ListChangeListener<ICarteTransport> cartesVisiblesChangement = change -> {
             while (change.next()){
                 if (change.wasAdded()){
-
                     for (ICarteTransport c : change.getAddedSubList()){
                         VueCarteTransport vct = new VueCarteTransport(c);
+                        vct.setPrefWidth(120);
                         vct.setOnMouseClicked(mouseEvent -> {
                             jeu.uneCarteTransportAEteChoisie(c);
                         });
@@ -215,7 +222,7 @@ public class VueDuJeu extends VBox {
         //partieBas.getChildren().add(saisiePions);
         // TEST AJOUT POUR NBPIONS
         partieBas.setRight(partieBasDroite);
-        partieBas.setPadding(new Insets(20,0,10,0));
+        partieBas.setPadding(new Insets(5,0,10,0));
 
 
         setBackGround();
@@ -243,8 +250,8 @@ public class VueDuJeu extends VBox {
     }
 
     public void creerBindings() {
-        plateau.prefWidthProperty().bind(getScene().widthProperty().divide(1.3));
-        plateau.prefHeightProperty().bind(getScene().heightProperty().divide(1.3));
+        plateau.prefWidthProperty().bind(getScene().widthProperty().divide(1.5));
+        plateau.prefHeightProperty().bind(getScene().heightProperty().divide(1));
 
         jCourant.prefWidthProperty().bind(getScene().widthProperty().subtract(plateau.prefWidthProperty()));
         jCourant.prefHeightProperty().bindBidirectional(plateau.prefHeightProperty());
@@ -349,6 +356,9 @@ public class VueDuJeu extends VBox {
                 partieBas.getChildren().clear();
                 partieBas.setCenter(listeDestination);
                 partieBas.setRight(partieBasDroite);
+                if (!jCourant.getUtile().isEmpty()){
+                    jCourant.getUtile().clear();
+                }
             }
             if (actionARealiser.getText().contains("Saisissez un nombre de pion")){
                 partieBas.getChildren().clear();
@@ -357,6 +367,7 @@ public class VueDuJeu extends VBox {
                 bateauxBouton.setVisible(false);
                 wagonsBouton.setVisible(false);
                 saisiePionBox.setVisible(true);
+
 
             }
             if (actionARealiser.getText().contains("Début du tour")){
@@ -368,16 +379,28 @@ public class VueDuJeu extends VBox {
                 bateauxBouton.setVisible(true);
                 wagonsBouton.setVisible(true);
                 dosDestination.setVisible(true);
+                if (!jCourant.getUtile().isEmpty()){
+                    jCourant.getUtile().clear();
+                }
             }
             if (actionARealiser.getText().contains("révéler une carte")){
                 partieBas.getChildren().clear();
                 partieBas.setRight(partieBasDroite);
                 partieBas.setCenter(cartesPiochables);
                 dosDestination.setVisible(false);
+                if (!jCourant.getUtile().isEmpty()){
+                    jCourant.getUtile().clear();
+                }
             }
-            if (actionARealiser.getText().contains("Il faut défausser") && actionARealiser.getText().contains("pour prendre la")){
+            if (actionARealiser.getText().contains("Il faut défausser") && actionARealiser.getText().contains("pour prendre la")) {
                 partieBas.getChildren().clear();
                 partieBas.setRight(partieBasDroite);
+                if (!jCourant.getUtile().isEmpty()) {
+                    for (VueCarteTransport v : jCourant.getUtile()) {
+                        v.getStyleClass().add("tooltip");
+                    }
+
+                }
             }
         });
 
@@ -417,7 +440,9 @@ public class VueDuJeu extends VBox {
         this.stackpanePion= new StackPane();
         stackpanePion.getChildren().addAll(boxPions);
         stackpanePion.setPrefSize(60,25);
-        stackpanePion.setPadding(new Insets(0,0,10,80));
+        stackpanePion.setPadding(new Insets(5,0,10,90));
+
+
 
     }
 

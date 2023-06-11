@@ -52,7 +52,7 @@ public class VueAutresJoueurs extends StackPane {
         nbPorts.textProperty().bind(Bindings.concat(nbPorts.getText(), getJoueur(this.nomJoueur.getText()).nbPionsPortProperty()));
 
         nbPionsWagons.textProperty().bind(Bindings.concat(nbPionsWagons.getText(),((Joueur)getJoueur(this.nomJoueur.getText())).nbPionsWagonsProperty()));
-
+        scoreAffichage.setMinWidth(100);
         scoreAffichage.getChildren().addAll(score,nbPionsBateaux,nbPionsWagons,nbPorts);
         scoreAffichage.setVisible(false);
         scoreAffichage.setStyle("-fx-background-color: #6F4E37; -fx-text-fill: white; -fx-font-size: 15px; " +
